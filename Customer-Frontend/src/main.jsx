@@ -5,6 +5,7 @@ import './index.css'
 
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
+import Auth from './pages/Auth'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -12,6 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Navbar />
             <Routes>
                 <Route path='/' element={<Home />} />
+                <Route path='/auth' element={<Auth />} />
             </Routes>
         </Router>
     </React.StrictMode>,
