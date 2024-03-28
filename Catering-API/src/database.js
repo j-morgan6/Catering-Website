@@ -1,5 +1,5 @@
-import { default as sqlite } from 'better-sqlite3'
-import join from 'path'
+const sqlite = require('better-sqlite3')
+const { join } = require('path')
 
 const dbPath = join(__dirname, process.env.DB_PATH)
 try {
