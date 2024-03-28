@@ -1,9 +1,9 @@
-import { Router } from 'express'
-import { default as joi } from 'joi'
-import { sign, verify } from 'jsonwebtoken'
-import { hash, compare } from 'bcrypt'
-import { StatusCodes, ReasonPhrases } from 'http-status-codes'
-import Database from '../database'
+const { Router } = require('express')
+const joi = require('joi')
+const { sign, verify } = require('jsonwebtoken')
+const { hash, compare } = require('bcrypt')
+const { StatusCodes, ReasonPhrases } = require('http-status-codes')
+const { Database } = require('../database') 
 
 const router = Router()
 

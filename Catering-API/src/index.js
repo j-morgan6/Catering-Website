@@ -1,9 +1,9 @@
-import readdirSync from 'fs'
-import path from 'path'
-import { default as express } from 'express'
-import { default as cors } from 'cors'
-import { default as cookieParser } from 'cookie-parser'
-import { default as dotenv } from 'dotenv'
+const { readdirSync } = require('fs')
+const { join } = require('path')
+const express = require('express')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
+const dotenv = require('dotenv')
 
 dotenv.config()
 
@@ -42,10 +42,10 @@ app.use(cors({
 app.use(cookieParser())
 
 // Import and set routes located in src/routes
-const routesPath = path.join(__dirname, 'routes')
-const routeFiles = fs.readdirSync(routesPath).filter(file => file.endsWith('.js'))
+const routesPath = join(__dirname, 'routes')
+const routeFiles = readdirSync(routesPath).filter(file => file.endsWith('.js'))
 for (const file of routeFiles) {
-    const router = require(path.join(routesPath, file))
+    const router = require(join(routesPath, file))
     app.use(router.route, router.router)
 }
 
