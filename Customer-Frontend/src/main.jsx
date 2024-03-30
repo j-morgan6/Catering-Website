@@ -2,10 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import Menu from './pages/Menu'
-import Cart from './pages/Cart'
+import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
