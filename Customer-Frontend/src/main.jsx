@@ -5,6 +5,7 @@ import './index.css'
 
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
+import Menu from './pages/Menu'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -12,6 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Navbar />
             <Routes>
                 <Route path='/' element={<Home />} />
+                <Route path='/menu' element={<Menu />} />
             </Routes>
         </Router>
     </React.StrictMode>,
