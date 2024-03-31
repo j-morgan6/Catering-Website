@@ -24,6 +24,7 @@
     padding: 1%;
     margin: 1%;
     border: 2px solid black;
+<<<<<<< HEAD
     text-decoration: none;
     color: black;
 }
@@ -37,6 +38,8 @@
 .card:hover{
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     cursor: pointer;
+=======
+>>>>>>> 98bf33d (display menu items and some styling)
 }
 
 .menuImg{
@@ -69,6 +72,7 @@ h2{
     margin: 0;
 }
 
+<<<<<<< HEAD
 .expanded{
     display: flex;
     flex-direction: row;
@@ -178,4 +182,7 @@ input[type="number"]::-webkit-outer-spin-button {
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
+=======
+
+>>>>>>> 98bf33d (display menu items and some styling)
 
