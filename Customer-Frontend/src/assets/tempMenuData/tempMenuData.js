@@ -16,7 +16,7 @@ const categories = [
         img: "src/assets/tempMenuData/lunchbox.jpg"
     },
     {
-        title: "Dessert",
+        title: "Desserts",
         img: "src/assets/tempMenuData/minipastries.jpg"
     }
 ]
@@ -26,144 +26,144 @@ const menuItems = [
         name: "Breakfast combo",
         description: "Baked Good or Muffin + Yogurt Parfait or Fruit Salad",
         price: "10.15",
-        Category: "Breakfast",
-        ImageURL: "",
+        category: "Breakfast",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Breakfast Platter",
         description: "Assortment of muffins, sweet and savoury baked goods",
         price: "5.75",
-        Category: "Breakfast",
-        ImageURL: "",
+        category: "Breakfast",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Mini Baked Good Platter",
         description: "2 per person",
         price: "5.75",
-        Category: "Breakfast",
-        ImageURL: "",
+        category: "Breakfast",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Sandwich Platter",
         description: "",
         price: "13.35",
-        Category: "Lunch",
-        ImageURL: "",
+        category: "Lunch",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Side Salads",
         description: "",
         price: "6.25",
-        Category: "Lunch",
-        ImageURL: "",
+        category: "Lunch",
+        imageURL: "",
         vegetarian: true
     },
     {
         name: "Coffee Thermos (7 to 10 people)",
         description: "Rich dark or medium roast",
         price: "27.95",
-        Category: "Beverages",
-        ImageURL: "",
+        category: "Beverages",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Spring Water",
         description: "",
         price: "2.75",
-        Category: "Beverages",
-        ImageURL: "",
+        category: "Beverages",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Fruit and Cheese Platters",
         description: "",
         price: "6.55",
-        Category: "À la Carte",
-        ImageURL: "",
+        category: "À la Carte",
+        imageURL: "",
         vegetarian: true
     },
     {
         name: "Dessert Platter",
         description: "",
         price: "4.95",
-        Category: "Desserts",
-        ImageURL: "",
+        category: "Desserts",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Cookie Platter",
         description: "",
         price: "3.50",
-        Category: "Desserts",
-        ImageURL: "",
+        category: "Desserts",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Mini croissant",
         description: "",
         price: "3.95",
-        Category: "Mini Baked Good Platter",
-        ImageURL: "",
+        category: "Mini Baked Good Platter",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Mini chocolate croissant",
         description: "",
         price: "3.95",
-        Category: "Mini Baked Good Platter",
-        ImageURL: "",
+        category: "Mini Baked Good Platter",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Bocconcini and tomato",
         description: "",
         price: "13.35",
-        Category: "Sandwich Platter",
-        ImageURL: "",
+        category: "Sandwich Platter",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Roast Beef",
         description: "",
         price: "13.35",
-        Category: "Sandwich Platter",
-        ImageURL: "",
+        category: "Sandwich Platter",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Beet and goat cheese",
         description: "",
         price: "6.25",
-        Category: "Side Salads",
-        ImageURL: "",
+        category: "Side Salads",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Greek",
         description: "",
         price: "6.25",
-        Category: "Side Salads",
-        ImageURL: "",
+        category: "Side Salads",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Fresh fruit",
         description: "",
         price: "6.55",
-        Category: "Fruit and Cheese Platters",
-        ImageURL: "",
+        category: "Fruit and Cheese Platters",
+        imageURL: "",
         vegetarian: false
     },
     {
         name: "Fruit and cheese",
         description: "",
         price: "7.15",
-        Category: "Fruit and Cheese Platters",
-        ImageURL: "",
+        category: "Fruit and Cheese Platters",
+        imageURL: "",
         vegetarian: false
     },
 
