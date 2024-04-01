@@ -26,6 +26,11 @@
     border: 2px solid black;
 }
 
+.card:hover{
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
 .menuImg{
     border-radius: 10px;
     width: 100%;
@@ -54,6 +59,80 @@
 h2{
     padding: 0;
     margin: 0;
+}
+
+.expanded{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid red;
+}
+
+.expImg{
+    width: 40%;
+    height: auto;
+}
+
+.infoSec{
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    border: 1px solid orange;
+    width: 70%;
+}
+
+.addToCart{
+    margin-top: 10%;
+    margin-right: 10%;
+    width: 20%;
+    align-self: flex-end;
+}
+
+.expTitle{
+    align-self: center;
+}
+
+.option{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.optionLeft{
+    display: flex;
+    flex-direction: row;
+}
+
+.option .vegLogo{
+    align-self: center;
+    margin-left: 10px;
+}
+
+.quantityBar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 10%;
+    width: 20%;
+}
+
+.quantInput{
+    width: 50%;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.quantButton{
+    width: 15%;
 }
 
 

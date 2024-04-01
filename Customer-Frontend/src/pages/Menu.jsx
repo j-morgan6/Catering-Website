@@ -1,12 +1,13 @@
 import {React, useState} from "react";
 import { categories, menuItems } from "../assets/tempMenuData/tempMenuData";
-import { CategoryCard, MenuItemCard } from "../components/MenuComponents";
+import { CategoryCard, MenuItemCard, ExpandedItemSection } from "../components/MenuComponents";
 import './Menu.css'
 
 export default function Menu(){
     const [view, setView] = useState("categories")
     const [allItems, setAllItems] = useState(menuItems)
     const [shownItems, setShownItems] = useState([])
+    const [itemExpanded, setItemExpanded] = useState({})
     const [shownOptions, setShownOptions] = useState([])
 
     function HandleCategoryClick(categoryTitle){
@@ -19,12 +20,12 @@ export default function Menu(){
         setView("items")
     }
 
-    function HandleItemClicked(itemName){
+    function HandleItemClicked(itemClicked){
         const newShownOptions = allItems.filter((item) =>
-            item.category === itemName
+            item.category === itemClicked.name
         )
         setShownOptions(newShownOptions)
-
+        setItemExpanded(itemClicked)
         setView("expanded")
     }
 
@@ -56,6 +57,12 @@ export default function Menu(){
             )
             }
             </div>
+        }
+        {view == "expanded" &&
+            <ExpandedItemSection
+                expandedItem={itemExpanded}
+                options={shownOptions}
+            />
         }
     </div>
     );
