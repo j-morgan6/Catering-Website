@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
                 message: 'Invalid Credentials'
             })
         } else {
-            const match = compare(req.body.password, response.Password)
+            const match = await compare(req.body.password, response.Password)
             if (match) {
                 // generate JWTs
                 const accessToken = sign({ id: response.CustomerID }, process.env.JWT_SECRET, { expiresIn: '15m'})
@@ -112,7 +112,7 @@ router.post('/logout', (req, res) => {
     }
 })
 
-router.post('register', async (req, res) => {
+router.post('/register', async (req, res) => {
     const schema = joi.object({
         first_name: joi.string()
             .required(),
@@ -160,13 +160,13 @@ router.post('register', async (req, res) => {
         }
         customerQuery += ') ' + customerColumns + ')'
         const customerStatement = Database.prepare(customerQuery)
-        const customerResult = customerStatement.run(CustomerValues)
+        const customerId = customerStatement.run(CustomerValues).lastInsertRowid
 
         // Insert into CustomerCredentials table
-        credentialsQuery = 'INSERT INTO CustomerAuthentication (CustomerID, Email, Password'
-        credentialsColumns = "VALUES ($id, $email, $password"
-        credentialsValues = {
-            id: customerResult.lastInsertRowid,
+        let credentialsQuery = 'INSERT INTO CustomerAuthentication (CustomerID, Email, Password'
+        let credentialsColumns = "VALUES ($id, $email, $password"
+        let credentialsValues = {
+            id: customerId,
             email: values.email,
             password: values.password,
             phone: ""
@@ -181,8 +181,8 @@ router.post('register', async (req, res) => {
         credentialsStatement.run(credentialsValues)
 
         // Generate a JWT
-        const accessToken = jwt.sign({ id: customerResult.lastInsertRowid }, process.env.JWT_SECRET, { expiresIn: '15m'})
-        const refreshToken = jwt.sign({ id: customerResult.lastInsertRowid }, process.env.JWT_SECRET, { expiresIn: '7d'})
+        const accessToken = sign({ id: customerId }, process.env.JWT_SECRET, { expiresIn: '15m'})
+        const refreshToken = sign({ id: customerId }, process.env.JWT_SECRET, { expiresIn: '7d'})
         res.cookie('apd_accessToken', accessToken, {
             secure: true,
             sameSite: 'strict'
