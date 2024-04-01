@@ -124,7 +124,7 @@ const menuItems = [
         price: "13.35",
         category: "Sandwich Platter",
         imageURL: "",
-        vegetarian: false
+        vegetarian: true
     },
     {
         name: "Roast Beef",
@@ -140,7 +140,7 @@ const menuItems = [
         price: "6.25",
         category: "Side Salads",
         imageURL: "",
-        vegetarian: false
+        vegetarian: true
     },
     {
         name: "Greek",
@@ -148,7 +148,7 @@ const menuItems = [
         price: "6.25",
         category: "Side Salads",
         imageURL: "",
-        vegetarian: false
+        vegetarian: true
     },
     {
         name: "Fresh fruit",
