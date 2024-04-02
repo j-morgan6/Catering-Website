@@ -64,7 +64,10 @@ h2{
 .expanded{
     display: flex;
     flex-direction: row;
-    border: 1px solid red;
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 1%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 .expImg{
@@ -76,19 +79,34 @@ h2{
     display: flex;
     flex-direction: column;
     padding: 2%;
-    border: 1px solid orange;
     width: 70%;
+    margin-left: 20px;
 }
 
 .addToCart{
-    margin-top: 10%;
-    margin-right: 10%;
     width: 20%;
-    align-self: flex-end;
+    margin-left: 5%;
+}
+
+.infoBottomBar{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    margin-bottom: 5%;
+    width: 100%;
+}
+
+h3{
+    padding: 0;
+    margin: 0;
 }
 
 .expTitle{
     align-self: center;
+}
+
+.itemDesc{
+    text-align: center;
 }
 
 .option{
@@ -114,11 +132,18 @@ h2{
     flex-direction: row;
     justify-content: space-between;
     margin-right: 10%;
-    width: 20%;
+    width: 120px;
+}
+
+.quantContainer{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5%;
+    width: 100%;
 }
 
 .quantInput{
-    width: 50%;
+    width: 55px;
 }
 
 input[type="number"] {
@@ -132,8 +157,12 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .quantButton{
-    width: 15%;
+    width: 25px;
 }
 
-
+.quantButton:hover,
+.addToCart:hover{
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
 
