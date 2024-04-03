@@ -24,8 +24,8 @@ if (!process.env.JWT_SECRET) {
     process.exit(1)
 }
 
-if (!process.env.HASH_SALT) {
-    console.error('No salt provided.')
+if (!process.env.ALLOWED_ORIGINS) {
+    console.error('No Origins allowed.')
     process.exit(1)
 }
 
@@ -34,8 +34,21 @@ const app = express()
 // APP CONFIGURATION
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+const originCheck = (origin, callback) => {
+    if (origin) {
+        for (allowed of process.env.ALLOWED_ORIGINS.split(',')) {
+            if (origin.startsWith(`http://${allowed}`)) {
+                callback(null, true)
+                return
+            } 
+        }
+    }
+    
+    callback(new Error('Not allowed by CORS'))
+}
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: originCheck,
     optionsSuccessStatus: 200,
     credentials: true
 }))
