@@ -50,7 +50,7 @@ function Auth() {
         }
 
         try {
-            await axios.post('http://localhost/auth/login', credentials, {
+            await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/auth/login`, credentials, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -82,7 +82,7 @@ function Auth() {
         }
 
         try {
-            await axios.post('http://localhost/auth/register', credentials, {
+            await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/auth/register`, credentials, {
                 headers: {
                     "Content-Type": "application/json"
                 },
