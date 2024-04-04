@@ -2,9 +2,10 @@ import {React, useState} from "react";
 import { categories, menuItems } from "../assets/tempMenuData/tempMenuData";
 import { CategoryCard, MenuItemCard, ExpandedItemSection } from "../components/MenuComponents";
 import './Menu.css'
+import { useParams } from "react-router-dom";
 
 export default function Menu(){
-    const [view, setView] = useState("categories")
+    const { categoryParam, itemParam} = useParams();
     const [allItems, setAllItems] = useState(menuItems)
     const [shownItems, setShownItems] = useState([])
     const [itemExpanded, setItemExpanded] = useState({})
@@ -16,8 +17,6 @@ export default function Menu(){
             item.category === categoryTitle
         )
         setShownItems(newShownItems)
-
-        setView("items")
     }
 
     function HandleItemClicked(itemClicked){
@@ -26,13 +25,12 @@ export default function Menu(){
         )
         setShownOptions(newShownOptions)
         setItemExpanded(itemClicked)
-        setView("expanded")
     }
 
     return(
     <div className="menu">
         <h1>Catering Menu</h1>
-        {view == "categories" &&
+        {!categoryParam && !itemParam &&
             <div className="section categories">
             {
             categories.map((category) => 
@@ -45,7 +43,7 @@ export default function Menu(){
             }
             </div>
         }
-        {view == "items" &&
+        {categoryParam && !itemParam &&
             <div className="section items">
             {
             shownItems.map((item) =>
@@ -58,7 +56,7 @@ export default function Menu(){
             }
             </div>
         }
-        {view == "expanded" &&
+        {categoryParam && itemParam &&
             <ExpandedItemSection
                 expandedItem={itemExpanded}
                 options={shownOptions}

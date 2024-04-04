@@ -1,23 +1,28 @@
 const categories = [
     {
         title: "Lunch",
-        img: "src/assets/tempMenuData/artisansandwiches.jpg"
+        img: "src/assets/tempMenuData/artisansandwiches.jpg",
+        path: "lunch"
     },
     {
         title: "Beverages",
-        img: "src/assets/tempMenuData/beverages.jpg"
+        img: "src/assets/tempMenuData/beverages.jpg",
+        path: "beverages"
     },
     {
         title: "Breakfast",
-        img: "src/assets/tempMenuData/breakfastsandwiches.jpg"
+        img: "src/assets/tempMenuData/breakfastsandwiches.jpg",
+        path: "breakfast"
     },
     {
         title: "À la Carte",
-        img: "src/assets/tempMenuData/lunchbox.jpg"
+        img: "src/assets/tempMenuData/lunchbox.jpg",
+        path: "a-la-carte"
     },
     {
         title: "Desserts",
-        img: "src/assets/tempMenuData/minipastries.jpg"
+        img: "src/assets/tempMenuData/minipastries.jpg",
+        path: "desserts"
     }
 ]
 
@@ -168,6 +173,14 @@ const menuItems = [
     },
 
 ]
+
+menuItems.forEach((item) => {
+    let newPath = item.name.toLowerCase();
+    newPath = newPath.split(' ').join('-')
+    newPath = newPath.replace(/[^a-z0-9-]/g, '');
+    item.path = newPath;
+});
+
 /*
 const options = [
     {
