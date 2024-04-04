@@ -1,31 +1,38 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom"
 
 function CategoryCard({category, clickHandler}){
     return(
-        <div className="card catCard" onClick={() => clickHandler(category.title)}>
-            {(category.img !== "") ? (
-                <img className="menuImg" src={category.img}/>
-            ) : (
-                <img className="menuImg" src={"src/assets/tempMenuData/placeholder.jpg"}/>
-            )}
-            <h2 className="cardTitle">{category.title}</h2>
-        </div>
+        <Link to="/menu/{category.path}">
+            <div className="card catCard" onClick={() => clickHandler(category.title)}>
+                {(category.img !== "") ? (
+                    <img className="menuImg" src={category.img}/>
+                ) : (
+                    <img className="menuImg" src={"src/assets/tempMenuData/placeholder.jpg"}/>
+                )}
+                <h2 className="cardTitle">{category.title}</h2>
+            </div>
+        </Link>
     );
 }
 
 function MenuItemCard({item, clickHandler}){
+    const currentPath = useLocation().pathname
+
     return(
-        <div className="card itemCard" onClick={() => clickHandler(item)}>
-            {(item.imageURL !== "") ? (
-                <img className="menuImg" src={item.imageURL}/>
-            ) : (
-                <img className="menuImg" src="src/assets/tempMenuData/placeholder.jpg"/>
-            )}
-            <div className="cardBar">
-                {item.vegetarian && <img className="vegLogo" src="src/assets/tempMenuData/veglogo.png"/>}
-                <h2 className="cardTitle">{item.name}</h2>
+        <Link to={"${currentPath}/${item.path}"}>
+            <div className="card itemCard" onClick={() => clickHandler(item)}>
+                {(item.imageURL !== "") ? (
+                    <img className="menuImg" src={item.imageURL}/>
+                ) : (
+                    <img className="menuImg" src="src/assets/tempMenuData/placeholder.jpg"/>
+                )}
+                <div className="cardBar">
+                    {item.vegetarian && <img className="vegLogo" src="src/assets/tempMenuData/veglogo.png"/>}
+                    <h2 className="cardTitle">{item.name}</h2>
+                </div>
             </div>
-        </div>
+        </Link>
     );
 }
 
