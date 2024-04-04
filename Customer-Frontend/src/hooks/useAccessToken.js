@@ -1,7 +1,7 @@
 import Cookies from "js-cookie"
 import axios from "axios"
 
-export async function getAccessToken() {
+export async function useAccessToken() {
     // get the access token
     let access = Cookies.get('apd_accessToken')
     const refresh = Cookies.get('apd_refreshToken')
