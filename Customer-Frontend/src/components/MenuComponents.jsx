@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom"
+import placeholderImage from "../assets/tempMenuData/placeholder.jpg"
+import vegLogo from "../assets/tempMenuData/veglogo.png"
 
 function CategoryCard({category, clickHandler}){
     return(
-        <Link to="/menu/{category.path}">
-            <div className="card catCard" onClick={() => clickHandler(category.title)}>
-                {(category.img !== "") ? (
-                    <img className="menuImg" src={category.img}/>
-                ) : (
-                    <img className="menuImg" src={"src/assets/tempMenuData/placeholder.jpg"}/>
-                )}
-                <h2 className="cardTitle">{category.title}</h2>
-            </div>
+        <Link className="card catCard" to={"/menu/" + category.path}
+            onClick={() => clickHandler(category.title)}>
+            {(category.img !== "") ? (
+                <img className="menuImg" src={category.img}/>
+            ) : (
+                <img className="menuImg" src={placeholderImage}/>
+            )}
+            <h2 className="cardTitle">{category.title}</h2>
         </Link>
     );
 }
@@ -20,17 +21,16 @@ function MenuItemCard({item, clickHandler}){
     const currentPath = useLocation().pathname
 
     return(
-        <Link to={"${currentPath}/${item.path}"}>
-            <div className="card itemCard" onClick={() => clickHandler(item)}>
-                {(item.imageURL !== "") ? (
-                    <img className="menuImg" src={item.imageURL}/>
-                ) : (
-                    <img className="menuImg" src="src/assets/tempMenuData/placeholder.jpg"/>
-                )}
-                <div className="cardBar">
-                    {item.vegetarian && <img className="vegLogo" src="src/assets/tempMenuData/veglogo.png"/>}
-                    <h2 className="cardTitle">{item.name}</h2>
-                </div>
+        <Link className="card itemCard" to={currentPath + "/" + item.path}
+            onClick={() => clickHandler(item)}>
+            {(item.imageURL !== "") ? (
+                <img className="menuImg" src={item.imageURL}/>
+            ) : (
+                <img className="menuImg" src={placeholderImage}/>
+            )}
+            <div className="cardBar">
+                {item.vegetarian && <img className="vegLogo" src={vegLogo}/>}
+                <h2 className="cardTitle">{item.name}</h2>
             </div>
         </Link>
     );
@@ -126,7 +126,7 @@ function ExpandedItemSection({expandedItem, options}){
             {(expandedItem.imageURL !== "") ? (
                 <img className="expImg" src={expandedItem.imageURL}/>
             ) : (
-                <img className="expImg" src="src/assets/tempMenuData/placeholder.jpg"/>
+                <img className="expImg" src={placeholderImage}/>
             )}
             <div className="infoSec">
                 <h2 className="expTitle">
@@ -175,7 +175,7 @@ function Option({item, GetQuantity, PlusPressed, SubPressed, InputChanged}){
             <div className="optionLeft">
                 <h5>{item.name + " $" + item.price}</h5>
                 {item.vegetarian && 
-                    <img className="vegLogo" src="src/assets/tempMenuData/veglogo.png"/>}
+                    <img className="vegLogo" src={vegLogo}/>}
             </div>
             <QuantityBar 
                 item={item}
