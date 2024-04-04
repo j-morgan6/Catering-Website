@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon -r dotenv/config . dotenv_config_path=config/.env.dev"
+    "dev": "nodemon -r dotenv/config . dotenv_config_path=config/.env.local"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
