@@ -30,12 +30,18 @@
 }
 
 #navbar-logo {
-    margin-top: 32px;
+    display: block;
+    height: 100%;
+    transition: all .3s ease;
+    transform: scale(1.25);
+}
+
+#navbar-logo:hover {
+    transform: scale(1);
 }
 
 #navbar-logo img {
-    display: block;
-    height: 112px;
+    height: 100%;
 }
 
 #navbar-links {
@@ -44,8 +50,15 @@
 }
 
 .navbar-link {
+    display: flex;
+    justify-content: center;
     color: white;
     text-decoration: none;
     font-weight: 700;
     font-size: 1.125rem;
+    transition: all .3s ease;
+}
+
+.navbar-link:hover {
+    color: var(--brand-tertiary)
 }

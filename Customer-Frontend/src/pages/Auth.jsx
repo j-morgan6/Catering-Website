@@ -1,7 +1,8 @@
 import { React, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { getAccessToken } from '../functions/tokens'
+import { useAccessToken } from '../hooks/useAccessToken'
+import { useUser } from '../hooks/useUser'
 import BreadmanGIF from '../assets/big_bread.gif'
 import './Auth.css'
 
@@ -17,6 +18,8 @@ function Auth() {
 
     const [formError, setFormError] = useState('')
 
+    const { user, login } = useUser()
+
     const navigate = useNavigate()
 
     function clearFormData(includeEmail) {
@@ -31,15 +34,8 @@ function Auth() {
 
     // if the user is logged in, redirect to home (change to account later)
     useEffect(() => {
-        const checkLogin = async () => {
-            // get the access token
-            const accessToken = await getAccessToken()
-
-            // if the access token exists, redirect
-            if (accessToken) navigate('/')
-        }
-        checkLogin()
-    })
+        if (user) navigate('/')
+    }, [])
 
     async function handleLogin(event) {
         event.preventDefault()
@@ -49,13 +45,16 @@ function Auth() {
             password: password
         }
 
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
         try {
-            await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/auth/login`, credentials, {
+            const response = await axios.post(`${apiURI}/auth/login`, credentials, {
                 headers: {
                     "Content-Type": "application/json"
                 },
                 withCredentials: true
             })
+
+            await login(response.data.accessToken)
 
             return navigate('/')
         } catch (err) {
@@ -82,12 +81,14 @@ function Auth() {
         }
 
         try {
-            await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/auth/register`, credentials, {
+            const response = await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/auth/register`, credentials, {
                 headers: {
                     "Content-Type": "application/json"
                 },
                 withCredentials: true
             })
+
+            await login(response.data.accessToken)
 
             return navigate('/')
         } catch (err) {
