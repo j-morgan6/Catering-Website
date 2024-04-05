@@ -2,29 +2,44 @@ import {React, useState} from "react";
 import { categories, menuItems } from "../assets/tempMenuData/tempMenuData";
 import { CategoryCard, MenuItemCard, ExpandedItemSection } from "../components/MenuComponents";
 import './Menu.css'
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 export default function Menu(){
     const { categoryParam, itemParam} = useParams();
     const [allItems, setAllItems] = useState(menuItems)
-    const [shownItems, setShownItems] = useState([])
-    const [itemExpanded, setItemExpanded] = useState({})
-    const [shownOptions, setShownOptions] = useState([])
 
-    function HandleCategoryClick(categoryTitle){
-        //set shownItems to items of category clicked
-        const newShownItems = allItems.filter((item) =>
-            item.category === categoryTitle
+    //derive correct items based off path visited
+    let shownItems = []
+    let options = []
+    let itemExpanded
+    let categoryVisited
+    let categoryExists
+    let expandedExists
+
+    if(categoryParam){
+        categoryVisited = categories.find((category) =>
+            category.path === categoryParam
         )
-        setShownItems(newShownItems)
+        if(categoryVisited){
+            categoryExists = true
+            shownItems = allItems.filter((item) => 
+                item.category === categoryVisited.title
+            )
+        } else
+            categoryExists = false
     }
-
-    function HandleItemClicked(itemClicked){
-        const newShownOptions = allItems.filter((item) =>
-            item.category === itemClicked.name
+    if(itemParam){
+        itemExpanded = allItems.find((item) => 
+            item.path === itemParam
         )
-        setShownOptions(newShownOptions)
-        setItemExpanded(itemClicked)
+        if(itemExpanded && (categoryVisited.title === itemExpanded.category)){
+             //item with path exists now find options
+            expandedExists = true
+            options = allItems.filter((item) => 
+                itemExpanded.name === item.category
+            )
+        } else
+            expandedExists = false
     }
 
     return(
@@ -37,30 +52,44 @@ export default function Menu(){
                 <CategoryCard 
                     key={category.title} 
                     category={category} 
-                    clickHandler={HandleCategoryClick}
                 />
             )
             }
             </div>
         }
-        {categoryParam && !itemParam &&
-            <div className="section items">
-            {
-            shownItems.map((item) =>
-                <MenuItemCard 
-                    key={item.name}
-                    item={item}
-                    clickHandler={HandleItemClicked}
-                />
+        {categoryParam && !itemParam ? (
+            (categoryExists) ? (
+                <div className="section items">
+                {
+                shownItems.map((item) =>
+                    <MenuItemCard 
+                        key={item.name}
+                        item={item}
+                    />
+                )
+                }
+                </div>
+            ) : (
+                <div className="error">
+                    <h1>Category you tried to visit does not exist, sorry.</h1>
+                    <Link to="/menu">Go back to menu</Link>
+                </div>
             )
-            }
-            </div>
+        ) : null
         }
-        {categoryParam && itemParam &&
-            <ExpandedItemSection
-                expandedItem={itemExpanded}
-                options={shownOptions}
-            />
+        {categoryParam && itemParam ? (
+            (expandedExists) ? (
+                <ExpandedItemSection
+                    expandedItem={itemExpanded}
+                    options={options}
+                />
+            ) : (
+                <div className="error">
+                    <h1>Item you tried to visit does not exist, sorry.</h1>
+                    <Link to="/menu">Go back to menu</Link>
+                </div>
+            )
+        ) : null
         }
     </div>
     );
