@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom"
 import placeholderImage from "../assets/tempMenuData/placeholder.jpg"
 import vegLogo from "../assets/tempMenuData/veglogo.png"
 
-function CategoryCard({category, clickHandler}){
+function CategoryCard({category}){
     return(
         <Link className="card catCard" to={"/menu/" + category.path}>
             {(category.img !== "") ? (
