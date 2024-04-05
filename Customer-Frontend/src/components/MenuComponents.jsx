@@ -3,10 +3,9 @@ import { Link, useLocation } from "react-router-dom"
 import placeholderImage from "../assets/tempMenuData/placeholder.jpg"
 import vegLogo from "../assets/tempMenuData/veglogo.png"
 
-function CategoryCard({category, clickHandler}){
+function CategoryCard({category}){
     return(
-        <Link className="card catCard" to={"/menu/" + category.path}
-            onClick={() => clickHandler(category.title)}>
+        <Link className="card catCard" to={"/menu/" + category.path}>
             {(category.img !== "") ? (
                 <img className="menuImg" src={category.img}/>
             ) : (
@@ -21,8 +20,7 @@ function MenuItemCard({item, clickHandler}){
     const currentPath = useLocation().pathname
 
     return(
-        <Link className="card itemCard" to={currentPath + "/" + item.path}
-            onClick={() => clickHandler(item)}>
+        <Link className="card itemCard" to={currentPath + "/" + item.path}>
             {(item.imageURL !== "") ? (
                 <img className="menuImg" src={item.imageURL}/>
             ) : (
