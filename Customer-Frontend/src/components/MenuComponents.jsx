@@ -16,7 +16,7 @@ function CategoryCard({category}){
     );
 }
 
-function MenuItemCard({item, clickHandler}){
+function MenuItemCard({item}){
     const currentPath = useLocation().pathname
 
     return(
