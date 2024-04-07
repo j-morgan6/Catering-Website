@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const joi = require('joi')
-const { CustomerTokens } = require('../functions/tokens')
+const { AdminTokens } = require('../functions/tokens')
 const { extractAuthToken } = require('../functions/authorization')
 const { hash, compare } = require('bcrypt')
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
@@ -10,8 +10,7 @@ const router = Router()
 
 router.post('/login', async (req, res) => {
     const schema = joi.object({
-        email: joi.string()
-            .email()
+        username: joi.string()
             .required(),
         password: joi.string()
             .required()
@@ -29,10 +28,10 @@ router.post('/login', async (req, res) => {
         return
     }
 
-    const query = Database.prepare('SELECT CustomerID, Password FROM CustomerAuthentication WHERE Email = $email')
+    const query = Database.prepare('SELECT AdminID, Password FROM AdminAuthentication WHERE LOWER(Username) = LOWER($username)')
 
     try {
-        const response = query.get({ email: req.body.email })
+        const response = query.get({ username: req.body.username })
         if (!response) {
             res.status(StatusCodes.UNAUTHORIZED).send({
                 success: false,
@@ -42,7 +41,7 @@ router.post('/login', async (req, res) => {
             const match = await compare(req.body.password, response.Password)
             if (match) {
                 // generate JWTs
-                const { access, refresh } = CustomerTokens.createTokenSet({ id: response.CustomerID })
+                const { access, refresh } = AdminTokens.createTokenSet({ id: response.AdminID })
                 res.cookie('apd_accessToken', access, {
                     secure: true,
                     sameSite: 'strict'
@@ -69,7 +68,6 @@ router.post('/login', async (req, res) => {
             error: {
                 code: StatusCodes.INTERNAL_SERVER_ERROR,
                 reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
-                message: err.message ? err.message : "The server encountered an error."
             }
         })
     }
@@ -81,16 +79,8 @@ router.post('/register', async (req, res) => {
             .required(),
         last_name: joi.string()
             .required(),
-        company: joi.string()
-            .optional()
-            .allow(''),
-        email: joi.string()
-            .email()
+        username: joi.string()
             .required(),
-        phone: joi.string()
-            .length(10)
-            .optional()
-            .allow(''),
         password: joi.string()
             .required()
     })
@@ -108,43 +98,22 @@ router.post('/register', async (req, res) => {
     }
 
     const transaction = Database.transaction(values => {
-        // Insert into Customer table
-        let customerQuery = 'INSERT INTO Customer (FirstName, LastName'
-        let customerColumns = 'VALUES ($first, $last'
-        let CustomerValues = {
-            first: values.first_name,
-            last: values.last_name,
-            company: ''
-        }
-        if (values.company) {
-            customerQuery += ', Company'
-            customerColumns += ', $company'
-            CustomerValues.company = values.company
-        }
-        customerQuery += ') ' + customerColumns + ')'
-        const customerStatement = Database.prepare(customerQuery)
-        const customerId = customerStatement.run(CustomerValues).lastInsertRowid
+        const adminStmt = Database.prepare('INSERT INTO Admin (FirstName, LastName) VALUES ($first, $last)')
+        const authStmt = Database.prepare('INSERT INTO AdminAuthentication (AdminID, Username, Password) VALUES ($id, $username, $password)')
 
-        // Insert into CustomerCredentials table
-        let credentialsQuery = 'INSERT INTO CustomerAuthentication (CustomerID, Email, Password'
-        let credentialsColumns = "VALUES ($id, $email, $password"
-        let credentialsValues = {
-            id: customerId,
-            email: values.email,
-            password: values.password,
-            phone: ""
-        }
-        if (values.phone) {
-            credentialsQuery += ', Phone'
-            credentialsColumns += ", $phone"
-            credentialsValues.phone = values.phone
-        }
-        credentialsQuery += ') ' + credentialsColumns + ')'
-        const credentialsStatement = Database.prepare(credentialsQuery)
-        credentialsStatement.run(credentialsValues)
+        const adminID = adminStmt.run({
+            first: req.body.first_name,
+            last: req.body.last_name
+        }).lastInsertRowid
 
-        // Generate a JWT
-        const { access, refresh } = CustomerTokens.createTokenSet({ id: customerId })
+        authStmt.run({
+            id: adminID,
+            username: req.body.username,
+            password: req.body.password
+        })
+
+        // generate JWTs
+        const { access, refresh } = AdminTokens.createTokenSet({ id: adminID })
         res.cookie('apd_accessToken', access, {
             secure: true,
             sameSite: 'strict'
@@ -154,7 +123,7 @@ router.post('/register', async (req, res) => {
             sameSite: 'strict'
         })
         
-        res.send({
+        res.send({ 
             success: true,
             accessToken: access,
             refreshToken: refresh
@@ -168,23 +137,16 @@ router.post('/register', async (req, res) => {
         transaction(req.body)
     } catch (err) {
         if (err.message.includes('UNIQUE constraint failed')) {
-            let conflict = ''
-            if (err.message.includes('CustomerAuthentication.Email')) conflict = 'email'
-            else if (err.message.includes('CustomerAuthentication.Phone')) conflict = 'phone'
-
-            if (conflict) {
-                res.status(StatusCodes.CONFLICT).send({
-                    error: {
-                        code: StatusCodes.CONFLICT,
-                        reason: ReasonPhrases.CONFLICT,
-                        message: conflict + ' must be unique'
-                    }
-                })
-                return
-            }
+            res.status(StatusCodes.CONFLICT).send({
+                error: {
+                    code: StatusCodes.CONFLICT,
+                    reason: ReasonPhrases.CONFLICT,
+                    message: err.message
+                }
+            })
         }
 
-        res.status(500).send({
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             error: {
                 code: StatusCodes.INTERNAL_SERVER_ERROR,
                 reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
@@ -198,7 +160,7 @@ router.post('/validate', (req, res) => {
     // Get authorization token
     const token = extractAuthToken(req.headers.authorization)
 
-    const payload = CustomerTokens.validate(token)
+    const payload = AdminTokens.validate(token)
     if (!payload) {
         res.status(StatusCodes.UNAUTHORIZED).send({
             error: {
@@ -217,7 +179,7 @@ router.post('/refresh', (req, res) => {
     // Get authorization token
     const token = extractAuthToken(req.headers.authorization)
 
-    const payload = CustomerTokens.validate(token)
+    const payload = AdminTokens.validate(token)
     if (!payload) {
         res.status(StatusCodes.UNAUTHORIZED).send({
             error: {
@@ -229,7 +191,7 @@ router.post('/refresh', (req, res) => {
         return
     }
 
-    const newToken = CustomerTokens.createAccessToken(payload.id)
+    const newToken = AdminTokens.createAccessToken(payload.id)
 
     res.cookie('apd_accessToken', newToken, {
         secure: true,
@@ -242,5 +204,5 @@ router.post('/refresh', (req, res) => {
 
 module.exports = {
     router: router,
-    route: '/auth'
+    route: '/admin/auth'
 }

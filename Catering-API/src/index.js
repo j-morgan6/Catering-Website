@@ -35,23 +35,24 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const originCheck = (origin, callback) => {
-    if (origin) {
-        for (allowed of process.env.ALLOWED_ORIGINS.split(',')) {
-            if (origin.startsWith(`http://${allowed}`)) {
-                callback(null, true)
-                return
-            } 
-        }
-    }
+// const originCheck = (origin, callback) => {
+//     if (origin) {
+//         for (allowed of process.env.ALLOWED_ORIGINS.split(',')) {
+//             if (origin.startsWith(`http://${allowed}`)) {
+//                 callback(null, true)
+//                 return
+//             } 
+//         }
+//     }
     
-    callback(new Error('Not allowed by CORS'))
-}
-app.use(cors({
-    origin: originCheck,
-    optionsSuccessStatus: 200,
-    credentials: true
-}))
+//     callback(new Error('Not allowed by CORS'))
+// }
+// app.use(cors({
+//     origin: originCheck,
+//     optionsSuccessStatus: 200,
+//     credentials: true
+// }))
+app.use(cors())
 app.use(cookieParser())
 
 // Import and set routes located in src/routes
