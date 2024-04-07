@@ -6,6 +6,7 @@
     "dev": "nodemon -r dotenv/config . dotenv_config_path=config/.env.local"
   },
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^9.4.3",
     "cookie-parser": "^1.4.6",
