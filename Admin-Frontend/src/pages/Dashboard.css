@@ -1,0 +1,21 @@
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.centered-table {
+    border-collapse: collapse;
+    width: 80%; /* Adjust based on your preference */
+    border: 1px solid #ddd; /* Light grey border */
+}
+
+.centered-table th, .centered-table td {
+    text-align: left;
+    padding: 8px;
+}
+
+.centered-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
