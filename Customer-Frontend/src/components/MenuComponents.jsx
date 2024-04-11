@@ -34,7 +34,8 @@ function MenuItemCard({item}){
     );
 }
 
-function ExpandedItemSection({expandedItem, options}){
+function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
+    const [justAdded, setJustAdded] = useState(false);
     const [quantities, setQuantities] = useState((options.length !== 0) ? options.map((option) => {
         return({
             optionName: option.name,
@@ -55,6 +56,7 @@ function ExpandedItemSection({expandedItem, options}){
     const totalStr = total.toFixed(2)
 
     function PlusPressed(item){
+        if(justAdded) setJustAdded(false)
         const itemIndex = quantities.findIndex((quantity) =>
             quantity.optionName === item.name
         )
@@ -70,6 +72,7 @@ function ExpandedItemSection({expandedItem, options}){
     }
 
     function SubPressed(item){
+        if(justAdded) setJustAdded(false)
         const itemIndex = quantities.findIndex((quantity) =>
             quantity.optionName === item.name
         )
@@ -85,6 +88,7 @@ function ExpandedItemSection({expandedItem, options}){
     }
 
     function InputChanged(e, item){
+        if(justAdded) setJustAdded(false)
         const itemIndex = quantities.findIndex((quantity) =>
             quantity.optionName === item.name
         )
@@ -119,50 +123,72 @@ function ExpandedItemSection({expandedItem, options}){
         }
     }
 
+    function OnAddToCart(){
+        let zeroQuantity = true
+        quantities.forEach((quantity) => {
+            if(quantity.quantity != 0)
+                zeroQuantity = false
+        });
+        
+        if(!zeroQuantity){ //added items to cart
+            setJustAdded(true)
+            AddItemsToOrder(quantities) //send to menu component for processing
+        }
+    }
+
     return(
-        <div className="expanded">
-            {(expandedItem.imageURL !== "") ? (
-                <img className="expImg" src={expandedItem.imageURL}/>
-            ) : (
-                <img className="expImg" src={placeholderImage}/>
-            )}
-            <div className="infoSec">
-                <h2 className="expTitle">
-                    {(options.length !== 0) ? expandedItem.name 
-                        : expandedItem.name + " $" + expandedItem.price}
-                </h2>
-                {expandedItem.description !== "" && <p className="itemDesc">{expandedItem.description}</p>}
-                {  
-                (options.length === 0) ? (
-                    <div className="quantContainer">
-                        <QuantityBar
-                            item={expandedItem}
-                            GetQuantity={GetQuantity}
-                            PlusPressed={PlusPressed}
-                            SubPressed={SubPressed}
-                            InputChanged={InputChanged}
-                        />
-                    </div>
+        <div>
+            <div className="expanded">
+                {(expandedItem.imageURL !== "") ? (
+                    <img className="expImg" src={expandedItem.imageURL}/>
                 ) : (
-                    <div className="optionContainer">
-                        {options.map((option) =>
-                            <Option 
-                                key={option.name} 
-                                item={option}
+                    <img className="expImg" src={placeholderImage}/>
+                )}
+                <div className="infoSec">
+                    <h2 className="expTitle">
+                        {(options.length !== 0) ? expandedItem.name 
+                            : expandedItem.name + " $" + expandedItem.price}
+                    </h2>
+                    {expandedItem.description !== "" && <p className="itemDesc">{expandedItem.description}</p>}
+                    {  
+                    (options.length === 0) ? (
+                        <div className="quantContainer">
+                            <QuantityBar
+                                item={expandedItem}
                                 GetQuantity={GetQuantity}
                                 PlusPressed={PlusPressed}
                                 SubPressed={SubPressed}
                                 InputChanged={InputChanged}
                             />
-                        )}
+                        </div>
+                    ) : (
+                        <div className="optionContainer">
+                            {options.map((option) =>
+                                <Option 
+                                    key={option.name} 
+                                    item={option}
+                                    GetQuantity={GetQuantity}
+                                    PlusPressed={PlusPressed}
+                                    SubPressed={SubPressed}
+                                    InputChanged={InputChanged}
+                                />
+                            )}
+                        </div>
+                    )
+                    }
+                    <div className="infoBottomBar">
+                        <h3>Total: ${totalStr}</h3>
+                        <button 
+                            onClick={() => OnAddToCart()}
+                            className="addToCart">
+                            Add to cart
+                        </button>
                     </div>
-                )
-                }
-                <div className="infoBottomBar">
-                    <h3>Total: ${totalStr}</h3>
-                    <button className="addToCart">Add to cart</button>
                 </div>
             </div>
+            {justAdded && 
+                <h2 className="added">Added items to cart! <Link to="/cart">Go to cart</Link></h2>
+            }
         </div>
     );
 }

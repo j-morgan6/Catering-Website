@@ -3,10 +3,39 @@ import { categories, menuItems } from "../assets/tempMenuData/tempMenuData";
 import { CategoryCard, MenuItemCard, ExpandedItemSection } from "../components/MenuComponents";
 import './Menu.css'
 import { useParams, Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function Menu(){
     const { categoryParam, itemParam} = useParams();
-    const [allItems, setAllItems] = useState(menuItems)
+    const [allItems, setAllItems] = useState(menuItems);
+    const [orderItems, setOrderItems] = useState([]);
+
+    function AddItemsToOrder(quantities){
+        let newOrderItems = JSON.parse(JSON.stringify(orderItems)) //create deepcopy
+
+        quantities.forEach((quantity) =>{
+            let itemAlreadyInOrder = newOrderItems.find((orderItem) => 
+                quantity.optionName === orderItem.name
+            )
+
+            if(!itemAlreadyInOrder){ //create a new order item inside orderItems
+                let newOrderItem = allItems.find((item) =>
+                    quantity.optionName === item.name
+                )
+                newOrderItem.quantity = quantity.quantity //add new property for quantity
+                newOrderItems.push(newOrderItem)
+            } else {//added item already in order so just update quantity
+                const i = newOrderItems.findIndex((item) =>
+                    quantity.optionName === item.name
+                )
+                newOrderItems[i].quantity += quantity.quantity
+            }
+        });
+
+        setOrderItems(newOrderItems);
+    }
+
+    console.log(orderItems)
 
     //derive correct items based off path visited
     let shownItems = []
@@ -15,7 +44,6 @@ export default function Menu(){
     let categoryVisited
     let categoryExists
     let expandedExists
-
     if(categoryParam){
         categoryVisited = categories.find((category) =>
             category.path === categoryParam
@@ -82,6 +110,7 @@ export default function Menu(){
                 <ExpandedItemSection
                     expandedItem={itemExpanded}
                     options={options}
+                    AddItemsToOrder={AddItemsToOrder}
                 />
             ) : (
                 <div className="error">
