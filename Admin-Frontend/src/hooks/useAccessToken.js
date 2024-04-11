@@ -15,7 +15,7 @@ export async function useAccessToken() {
 async function validateToken(token) {
     if (!token) return false
     try {
-        await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/auth/validate`, [], {
+        await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/admin/auth/validate`, [], {
             headers: {
                 "Authorization": `Bearer ${token}`
             },
@@ -29,7 +29,7 @@ async function validateToken(token) {
 
 async function refreshToken(refreshToken) {
     try {
-        const response = await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/auth/refresh`, [], {
+        const response = await axios.post(`http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/admin/auth/refresh`, [], {
             headers: {
                 "Authorization": `Bearer ${refreshToken}`
             },
