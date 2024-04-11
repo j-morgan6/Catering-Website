@@ -48,7 +48,7 @@ function Auth() {
             </div>
             <div className='auth-container'>
                 <form onSubmit={handleLogin} className='auth-form'>
-                    <input className='input-text' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email*' required />
+                    <input className='input-text' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Username*' required />
                     <input className='input-text' type="password" name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password*' required />
                     <input type="submit" value="Log In" />
                 </form>
