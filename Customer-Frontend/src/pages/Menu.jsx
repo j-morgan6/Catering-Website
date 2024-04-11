@@ -1,4 +1,4 @@
-import {React, useState} from "react";
+import {React, useState, useEffect} from "react";
 import { categories, menuItems } from "../assets/tempMenuData/tempMenuData";
 import { CategoryCard, MenuItemCard, ExpandedItemSection } from "../components/MenuComponents";
 import './Menu.css'
@@ -9,6 +9,25 @@ export default function Menu(){
     const { categoryParam, itemParam} = useParams();
     const [allItems, setAllItems] = useState(menuItems);
     const [orderItems, setOrderItems] = useState([]);
+
+    //get cart from cookies on mount
+    useEffect(() => {
+        let cartItemsStr = Cookies.get('cart')
+        if(cartItemsStr){
+            const newOrderItems = JSON.parse(cartItemsStr)
+            setOrderItems(newOrderItems)
+            console.log(`GET cart cookies to:\n`, newOrderItems)
+        }
+    }, [])
+
+    //update cart cookie when orderItems changes
+    useEffect(() => {
+        if(orderItems.length > 0){
+            let cartItemsStr = JSON.stringify(orderItems)
+            Cookies.set('cart', cartItemsStr, {sameSite: 'None'})
+            console.log(`SET cart cookies to:\n ${cartItemsStr}`)
+        }
+    }, [orderItems])
 
     function AddItemsToOrder(quantities){
         let newOrderItems = JSON.parse(JSON.stringify(orderItems)) //create deepcopy
