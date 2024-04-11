@@ -6,6 +6,7 @@ import './index.css'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Menu from './pages/Menu'
+import Cart from './pages/Cart'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path='/menu' element={<Menu />} />
                 <Route path='/menu/:categoryParam' element={<Menu />} />
                 <Route path='/menu/:categoryParam/:itemParam' element={<Menu />} />
+                <Route path='/cart' element={<Cart />} />
             </Routes>
         </Router>
     </React.StrictMode>,
