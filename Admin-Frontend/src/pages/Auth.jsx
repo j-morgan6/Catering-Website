@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from 'axios'
 import { useUser } from '../hooks/useUser';
 import BreadmanGIF from '../assets/big_bread.gif';
 import './Auth.css';
 
 function Auth() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [formError, setFormError] = useState('');
 
@@ -20,14 +20,16 @@ function Auth() {
 
     async function handleLogin(event) {
         event.preventDefault();
-        const credentials = { email, password };
+        const credentials = { username, password };
         const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`;
 
         try {
-            const response = await axios.post(`${apiURI}/auth/login`, credentials, {
+            console.log('querying')
+            const response = await axios.post(`${apiURI}/admin/auth/login`, credentials, {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true
-            });
+            })
+            console.log(response)
 
             await login(response.data.accessToken);
             navigate('/Dashboard');
@@ -48,7 +50,7 @@ function Auth() {
             </div>
             <div className='auth-container'>
                 <form onSubmit={handleLogin} className='auth-form'>
-                    <input className='input-text' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Username*' required />
+                    <input className='input-text' type="text" name='username' value={username} onChange={e => setUsername(e.target.value)} placeholder='Username*' required />
                     <input className='input-text' type="password" name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password*' required />
                     <input type="submit" value="Log In" />
                 </form>

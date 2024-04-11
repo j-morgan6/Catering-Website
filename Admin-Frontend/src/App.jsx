@@ -14,7 +14,7 @@ function App() {
     const login = async (accessToken) => {
         const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`;
         try {
-            const response = await axios.get(`${apiURI}/user`, {
+            const response = await axios.get(`${apiURI}/admin`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`
                 }
