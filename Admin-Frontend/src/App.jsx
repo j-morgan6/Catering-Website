@@ -5,9 +5,8 @@ import axios from 'axios';
 import { useAccessToken } from './hooks/useAccessToken';
 
 import Navbar from './components/Navbar';
-// Home import removed since it's no longer needed
 import Auth from './pages/Auth';
-import Dashboard from './pages/Dashboard'; // Make sure to import the Dashboard component
+import Dashboard from './pages/Dashboard';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -40,12 +39,10 @@ function App() {
             <Router>
                 <Navbar />
                 <Routes>
-                    {/* Redirect from root based on authentication status */}
                     <Route path='/' element={<Navigate replace to={user ? "/dashboard" : "/auth"} />} />
                     <Route path='/auth' element={<Auth />} />
-                    {/* Protected Dashboard Route */}
-                    <Route path='/dashboard' element={user ? <Dashboard /> : <Navigate replace to="/auth" />} />
-                    {/* Removed the Home route */}
+                    {/* not protected anymore if logged in or not*/}
+                    <Route path='/dashboard' element={<Dashboard />} />
                 </Routes>
             </Router>
         </UserContext.Provider>

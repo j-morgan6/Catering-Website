@@ -2,20 +2,69 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    padding: 20px;
 }
 
 .centered-table {
     border-collapse: collapse;
-    width: 80%; /* Adjust based on your preference */
-    border: 1px solid #ddd; /* Light grey border */
+    width: 90%; 
+    margin-top: 20px;
 }
 
 .centered-table th, .centered-table td {
+    border: 1px solid #ddd;
     text-align: left;
     padding: 8px;
 }
 
-.centered-table tr:nth-child(even) {
+.centered-table th {
     background-color: #f2f2f2;
+}
+
+.centered-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+    cursor: auto;
+}
+
+.popup-content table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.popup-content th,
+.popup-content td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.quantity-header,
+.quantity-cell {
+    text-align: right;
+}
+
+.popup-content button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    cursor: pointer;
 }
