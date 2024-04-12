@@ -1,9 +1,10 @@
 import {React, useState, useEffect} from "react";
 import Cookies from "js-cookie";
-import { CartItemSection } from "../components/CartComponents";
+import { CartItemSection, OrderForm } from "../components/CartComponents";
 
 export default function Cart(){
     const [orderItems, setOrderItems] = useState([])
+    const [justEmptiedCart, setJustEmptiedCart] = useState(false)
 
     console.log(orderItems)
 
@@ -19,7 +20,7 @@ export default function Cart(){
 
     //update cart cookie when orderItems changes
     useEffect(() => {
-        if(orderItems.length > 0){
+        if(orderItems.length > 0 || justEmptiedCart){
             let cartItemsStr = JSON.stringify(orderItems)
             Cookies.set('cart', cartItemsStr, {sameSite: 'None'})
             console.log(`SET cart cookies to:\n ${cartItemsStr}`)
@@ -42,6 +43,7 @@ export default function Cart(){
         const newOrderItems = orderItems.filter((item) =>
             item.name !== itemToRemove.name
         )
+        if(newOrderItems.length == 0) setJustEmptiedCart(true)
         setOrderItems(newOrderItems)
     }
 
@@ -52,9 +54,7 @@ export default function Cart(){
             ChangeQuantity={ChangeQuantity}
             RemoveItem={RemoveItem}
         />
-        <div className="form">
-
-        </div>
+        <OrderForm />
     </div>
     );
 }
