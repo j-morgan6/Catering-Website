@@ -1,15 +1,32 @@
+<<<<<<< HEAD
 .cartPage{
     display: flex;
     flex-direction: column;
 }
 
+=======
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 .cart{
     width: 100vw;
     display: flex;
     flex-direction: row;
     justify-content: center;
+<<<<<<< HEAD
 }
 
+=======
+    border: 1px solid pink;
+}
+
+.informationSection{
+    width:500px;
+    border: 1px solid green;
+}
+
+select option:first-child{
+    display: none;
+}
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 
 .cartItemSection{
     min-width: 500px;
@@ -17,11 +34,16 @@
     width: 40%;
     display: flex;
     flex-direction: column;
+<<<<<<< HEAD
     border: 5px solid white;
     border-radius: 30px;
     margin: 30px;
     padding: 10px;
     background-color: black;
+=======
+    justify-content: space-between;
+    border: 1px solid seagreen;
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 }
 
 .cartItem{
@@ -33,7 +55,10 @@
     border-radius: 10px;
     margin: 15px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+<<<<<<< HEAD
     background-color: #EDDDC2;
+=======
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 }
 
 .noItemsText{
@@ -46,6 +71,10 @@
     flex-direction: row;
     align-items: center;
     width: 50%;
+<<<<<<< HEAD
+=======
+    border: 1px solid gray;
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 }
 
 .leftSidePart{
@@ -56,11 +85,14 @@
     color: red;
 }
 
+<<<<<<< HEAD
 .x:hover{
     cursor: pointer;
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
+=======
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 .itemRightSide{
     display:flex;
     flex-direction: row;
@@ -73,13 +105,19 @@
 
 .cartTitle{
     text-align: center;
+<<<<<<< HEAD
     color: white;
+=======
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 }
 
 .subTotal{
     text-align: right;
     margin-right: 20px;
+<<<<<<< HEAD
     color: white;
+=======
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 }
 
 
@@ -88,6 +126,7 @@
     min-height: auto;
     max-width: 55px;
     min-width: auto;
+<<<<<<< HEAD
 }
 
 
@@ -142,4 +181,6 @@ select option:first-child{
 .extraSpace{
     height: 500px;
     width: 100%;
+=======
+>>>>>>> 2ba44f3 (cart styling/bugfixes and start form)
 }
