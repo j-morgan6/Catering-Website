@@ -90,7 +90,6 @@ router.get('/', (req, res) => {
         }
 
         const orders = []
-
         for (const orderInfo of orderResponse) {
             const itemsResponse = orderItemsStmt.all({ orderID: orderInfo.ID })
 

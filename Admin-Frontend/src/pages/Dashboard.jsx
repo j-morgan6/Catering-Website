@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
+import { useAccessToken } from '../hooks/useAccessToken';
+import axios from 'axios'
 import './Dashboard.css'; 
 
 function Dashboard() {
@@ -6,50 +9,30 @@ function Dashboard() {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [selectedOrderItems, setSelectedOrderItems] = useState([]);
 
+    const navigate = useNavigate()
+
     useEffect(() => {
-        const mockData = [
-            {
-                orderID: 1,
-                timestamp: '2022-07-21 14:00',
-                status: 'Processing',
-                orderType: 'Pickup',
-                deliveryPickupTime: '2022-07-22 12:00',
-                instructions: 'Leave at front door',
-                total: 120.00,
-                customer: {
-                    firstName: 'John',
-                    lastName: 'Doe',
-                },
-                store: {
-                    streetName: '123 Main St'
-                },
-                items: [
-                    { name: 'Pizza', quantity: 2 },
-                    { name: 'Soda', quantity: 3 }
-                ]
-            },
-            {
-                orderID: 2,
-                timestamp: '2022-07-22 16:45',
-                status: 'Delivered',
-                orderType: 'Delivery',
-                deliveryPickupTime: '2022-07-22 17:30',
-                instructions: 'Call upon arrival',
-                total: 85.50,
-                customer: {
-                    firstName: 'Alice',
-                    lastName: 'Johnson',
-                },
-                store: {
-                    streetName: '456 Elm St'
-                },
-                items: [
-                    { name: 'Coffee', quantity: 1 },
-                    { name: 'Bagel', quantity: 4 }
-                ]
+        const requestOrders = async () => {
+            const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
+            try {
+                const accessToken = await useAccessToken()
+                if (!accessToken) {
+                    return navigate('/auth')
+                }
+
+                const response = await axios.get(`${apiURI}/orders`, {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                })
+                console.log(response.data)
+
+                setOrders(response.data)
+            } catch (err) {
+                console.log(err)
             }
-        ];
-        setOrders(mockData);
+        }
+        requestOrders()
     }, []);
 
     const handleRowClick = (orderItems) => {
@@ -70,8 +53,8 @@ function Dashboard() {
                     <tbody>
                         {selectedOrderItems.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.name}</td>
-                                <td className="quantity-cell">{item.quantity}</td>
+                                <td>{item.Name}</td>
+                                <td className="quantity-cell">{item.Quantity}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -101,7 +84,7 @@ function Dashboard() {
                         <tr key={order.orderID} onClick={() => handleRowClick(order.items)}>
                             <td>{order.orderID}</td>
                             <td>{`${order.customer.firstName} ${order.customer.lastName}`}</td>
-                            <td>{order.store.streetName}</td>
+                            <td>{order.store.street}</td>
                             <td>{order.status}</td>
                             <td>{order.timestamp}</td>
                             <td>{order.orderType}</td>
