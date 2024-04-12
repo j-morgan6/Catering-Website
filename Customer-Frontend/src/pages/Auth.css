@@ -113,17 +113,6 @@ input[type=checkbox]:checked {
     color: var(--background);
 }
 
-input[type=submit] {
-    width: 50%;
-    height: 64px;
-    border-width: 0;
-    border-radius: 35px;
-    background-color: black;
-    color: white;
-    font-size: 1rem;
-    transition: all .3s ease;
-}
-
 input[type=submit]:hover {
     background-color: rgba(0, 0, 0, .9);
     cursor: pointer;

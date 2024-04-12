@@ -21,7 +21,7 @@ function Navbar() {
                 <Link className='navbar-link' to='/cart'>Cart</Link>
                 <Link className='navbar-link' to='/contact'>Contact</Link>
                 {user && (
-                    <Link className='navbar-link' to='/auth'>{user.FirstName} {user.LastName}</Link>
+                    <Link className='navbar-link' to='/account'>{user.FirstName} {user.LastName}</Link>
                 )}
                 {!user && (
                     <Link className='navbar-link' to='/auth'>Login</Link>

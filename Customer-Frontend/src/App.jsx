@@ -7,6 +7,7 @@ import { useAccessToken } from './hooks/useAccessToken'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Auth from './pages/Auth'
+import Account from './pages/Account'
 
 function App() {
     const [user, setUser] = useState(null)
@@ -45,6 +46,7 @@ function App() {
                     <Routes>
                         <Route path='/' element={<Home />} />
                         <Route path='/auth' element={<Auth />} />
+                        <Route path='/account' element={<Account />} />
                     </Routes>
                 </Router>
             </UserContext.Provider>

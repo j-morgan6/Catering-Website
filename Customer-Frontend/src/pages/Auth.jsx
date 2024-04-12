@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { useAccessToken } from '../hooks/useAccessToken'
 import { useUser } from '../hooks/useUser'
 import BreadmanGIF from '../assets/big_bread.gif'
 import './Auth.css'
@@ -33,7 +32,7 @@ function Auth() {
     }
 
     // if the user is logged in, redirect to home (change to account later)
-    useEffect(() => {
+    useEffect(() => {``
         if (user) navigate('/')
     }, [])
 
@@ -110,8 +109,8 @@ function Auth() {
                 <h2>Your Information</h2>
                 {method === 'login' && (
                     <form onSubmit={handleLogin} className='auth-form'>
-                        <input className='input-text' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email*' />
-                        <input className='input-text' type="password" name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password*' />
+                        <input className='form-input-field' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email*' />
+                        <input className='form-input-field' type="password" name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password*' />
                         <span>
                             <input type="checkbox" id='remember' name='remember' />
                             <label htmlFor="remember">Remember Me</label>
@@ -123,14 +122,14 @@ function Auth() {
                 {method === 'signup' && (
                     <form onSubmit={handleSignup} className='auth-form'>
                         <div className='dual-input'>
-                            <input className='input-text' type="first-name" name='first-name' value={firstName} onChange={e => setFirstName(e.target.value)} placeholder='First Name*' />
-                            <input className='input-text' type="last-name" name='last-name' value={lastName} onChange={e => setLastName(e.target.value)} placeholder='Last Name*' />
+                            <input className='form-input-field' type="first-name" name='first-name' value={firstName} onChange={e => setFirstName(e.target.value)} placeholder='First Name*' />
+                            <input className='form-input-field' type="last-name" name='last-name' value={lastName} onChange={e => setLastName(e.target.value)} placeholder='Last Name*' />
                         </div>
-                        <input className='input-text' type="company" name='company' value={company} onChange={e => setCompany(e.target.value)} placeholder='Company' />
-                        <input className='input-text' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email*' />
-                        <input className='input-text' type="phone" name='phone' value={phone} onChange={e => setPhone(e.target.value)} placeholder='Phone*' />
-                        <input className='input-text' type="password" name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password*' />
-                        <input type="submit" value="Log In" />
+                        <input className='form-input-field' type="company" name='company' value={company} onChange={e => setCompany(e.target.value)} placeholder='Company' />
+                        <input className='form-input-field' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email*' />
+                        <input className='form-input-field' type="phone" name='phone' value={phone} onChange={e => setPhone(e.target.value)} placeholder='Phone*' />
+                        <input className='form-input-field' type="password" name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password*' />
+                        <input type="submit" value="Log In" className='primary-btn' />
                         <p>Already have an account? <button onClick={() => setMethod('login')}>Log In</button>.</p>
                     </form>
                 )}
