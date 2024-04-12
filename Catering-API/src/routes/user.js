@@ -2,6 +2,7 @@ const express = require('express')
 const joi = require('joi')
 const { CustomerTokens } = require('../functions/tokens')
 const { extractAuthToken } = require('../functions/authorization')
+const { compare, hash } = require('bcrypt')
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
 const { Database } = require('../database')
 
@@ -66,9 +67,7 @@ router.put('/', (req, res) => {
         phone: joi.string()
             .length(10)
             .optional()
-            .allow(''),
-        password: joi.string()
-            .optional()
+            .allow('')
     }).min(1)
 
     const validationResult = schema.validate(req.body)
@@ -87,14 +86,12 @@ router.put('/', (req, res) => {
         'company': 'Company',
         'email': 'Email',
         'phone': 'Phone',
-        'password': 'Password',
     }
 
     const tableMapping = {
         'company': 'Customer',
         'email': 'Authentication',
-        'phone': 'Authentication',
-        'password': 'Authentication',
+        'phone': 'Authentication'
     }
 
     // const customerQuery = 'UPDATE Customer SET'
@@ -141,6 +138,64 @@ router.put('/', (req, res) => {
     
     try {
         transaction()
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            error: {
+                code: StatusCodes.INTERNAL_SERVER_ERROR,
+                reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                message: err.message ? err.message : "The server encountered an error."
+            }
+        })
+    }
+})
+
+router.put('/password-reset', async (req, res) => {
+    // Get authorization token
+    const token = extractAuthToken(req.headers.authorization)
+
+    const payload = CustomerTokens.validate(token)
+    if (!payload) {
+        res.status(StatusCodes.UNAUTHORIZED).send({
+            error: {
+                code: StatusCodes.UNAUTHORIZED,
+                reason: ReasonPhrases.UNAUTHORIZED,
+                message: "Invaliad authorization token."
+            }
+        })
+        return
+    }
+
+    const schema = joi.object({
+        old_password: joi.string().required(),
+        new_password: joi.string().required()
+    })
+
+    const validationResult = schema.validate(req.body)
+    if (validationResult.error) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            error: {
+                code: StatusCodes.BAD_REQUEST,
+                reason: ReasonPhrases.BAD_REQUEST,
+                message: validationResult.error.message
+            }
+        })
+        return
+    }
+
+    try {
+        const passwordStmt = Database.prepare('SELECT Password from CustomerAuthentication WHERE CustomerID = $id')
+        const password = passwordStmt.get({ id: payload.id }).Password
+        console.log(password)
+
+        const match = await compare(req.body.old_password, password)
+        if (match) {
+            const hashed = await hash(req.body.new_password, 6)
+
+            const updateStmt = Database.prepare('UPDATE CustomerAuthentication SET Password = $password WHERE CustomerID = $id')
+            updateStmt.run({ id: payload.id, password: hashed })
+
+            res.send({ success: true })
+        }
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             error: {
