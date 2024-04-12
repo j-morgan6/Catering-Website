@@ -33,21 +33,23 @@ export default function Menu(){
         let newOrderItems = JSON.parse(JSON.stringify(orderItems)) //create deepcopy
 
         quantities.forEach((quantity) =>{
-            let itemAlreadyInOrder = newOrderItems.find((orderItem) => 
-                quantity.optionName === orderItem.name
-            )
+            if(quantity.quantity){
+                let itemAlreadyInOrder = newOrderItems.find((orderItem) => 
+                    quantity.optionName === orderItem.name
+                )
 
-            if(!itemAlreadyInOrder){ //create a new order item inside orderItems
-                let newOrderItem = allItems.find((item) =>
-                    quantity.optionName === item.name
-                )
-                newOrderItem.quantity = quantity.quantity //add new property for quantity
-                newOrderItems.push(newOrderItem)
-            } else {//added item already in order so just update quantity
-                const i = newOrderItems.findIndex((item) =>
-                    quantity.optionName === item.name
-                )
-                newOrderItems[i].quantity += quantity.quantity
+                if(!itemAlreadyInOrder){ //create a new order item inside orderItems
+                    let newOrderItem = allItems.find((item) =>
+                        quantity.optionName === item.name
+                    )
+                    newOrderItem.quantity = quantity.quantity //add new property for quantity
+                    newOrderItems.push(newOrderItem)
+                } else {//added item already in order so just update quantity
+                    const i = newOrderItems.findIndex((item) =>
+                        quantity.optionName === item.name
+                    )
+                    newOrderItems[i].quantity += quantity.quantity
+                }
             }
         });
 
