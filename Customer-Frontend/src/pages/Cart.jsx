@@ -48,13 +48,16 @@ export default function Cart(){
     }
 
     return(
-    <div className="cart">
-        <CartItemSection
-            orderItems={orderItems}
-            ChangeQuantity={ChangeQuantity}
-            RemoveItem={RemoveItem}
-        />
-        <OrderForm />
+    <div className="cartPage">
+        <div className="cart">
+            <CartItemSection
+                orderItems={orderItems}
+                ChangeQuantity={ChangeQuantity}
+                RemoveItem={RemoveItem}
+            />
+            <OrderForm />
+        </div>
+        <div className="extraSpace"></div>
     </div>
     );
 }
