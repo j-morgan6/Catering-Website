@@ -117,10 +117,6 @@ router.put('/', (req, res) => {
     customerQuery = `UPDATE Customer SET${customerQuery.slice(1)} WHERE ID = $id`
     authenticationQuery = `UPDATE CustomerAuthentication SET${authenticationQuery.slice(1)} WHERE CustomerID = $id`
 
-
-    console.log(customerValues)
-    console.log(authenticationValues)
-
     const transaction = Database.transaction(() => {
         if (Object.keys(customerValues).length > 1) {
             const customerStmt = Database.prepare(customerQuery)
@@ -185,7 +181,6 @@ router.put('/password-reset', async (req, res) => {
     try {
         const passwordStmt = Database.prepare('SELECT Password from CustomerAuthentication WHERE CustomerID = $id')
         const password = passwordStmt.get({ id: payload.id }).Password
-        console.log(password)
 
         const match = await compare(req.body.old_password, password)
         if (match) {
@@ -195,6 +190,15 @@ router.put('/password-reset', async (req, res) => {
             updateStmt.run({ id: payload.id, password: hashed })
 
             res.send({ success: true })
+        }
+        else {
+            res.status(StatusCodes.UNAUTHORIZED).send({
+                error: {
+                    code: StatusCodes.UNAUTHORIZED,
+                    reason: ReasonPhrases.UNAUTHORIZED,
+                    message: "Incorrect Password."
+                }
+            })
         }
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
@@ -226,12 +230,13 @@ router.delete('/', (req, res) => {
     const stmt = Database.prepare('DELETE FROM Customer WHERE ID = $id')
 
     try {
-        stmt.run(payload.id)
+        stmt.run({ id: payload.id })
         
         res.send({
             success: true
         })
     } catch (err) {
+        console.log(err)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             error: {
                 code: StatusCodes.INTERNAL_SERVER_ERROR,

@@ -13,6 +13,9 @@
     --brand-secondary: #000000;
     --brand-tertiary: #CE9539;
     --background: #EDDDC2;
+    --success: #2ECC71;
+    --danger: #DC143C;
+    --info: #1E90FF;
 }
 
 body {
@@ -79,4 +82,58 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: var(--brand-secondary);
+}
+
+.primary-btn {
+    height: 100%;
+    max-height: 4rem;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 1rem;
+    font-size: 1rem;
+    color: white;
+    background-color: var(--brand-primary);
+    cursor: pointer;
+    transition: all .3s ease;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.primary-btn:hover {
+    background-color: var(--brand-secondary);
+}
+
+.secondary-btn {
+    height: 100%;
+    max-height: 4rem;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 1rem;
+    font-size: 1rem;
+    color: white;
+    background-color: var(--brand-secondary);
+    cursor: pointer;
+    transition: all .3s ease;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.secondary-btn:hover {
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.success {
+    color: var(--success);
+}
+
+.danger {
+    color: var(--danger);
+}
+
+.info {
+    color: var(--info);
 }

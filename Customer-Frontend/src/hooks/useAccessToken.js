@@ -12,6 +12,11 @@ export async function useAccessToken() {
     return access
 }
 
+export function clearTokens() {
+    Cookies.remove('apd_accessToken')
+    Cookies.remove('apd_refreshToken')
+}
+
 async function validateToken(token) {
     if (!token) return false
     try {
