@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { UserContext } from './hooks/useUser'
 import axios from 'axios'
-import { useAccessToken } from './hooks/useAccessToken'
+import { useAccessToken, clearTokens } from './hooks/useAccessToken'
 
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Auth from './pages/Auth'
+import Account from './pages/Account'
 
 function App() {
+
     const [user, setUser] = useState(null)
     const login = async (accessToken) => {
         const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
@@ -24,7 +26,10 @@ function App() {
             console.error(err)
         }
     }
-    const logout = () => setUser(null)
+    const logout = () => {
+        setUser(null)
+        clearTokens()
+    }
 
     useEffect(() => {
         const getUser = async () => {
@@ -45,6 +50,7 @@ function App() {
                     <Routes>
                         <Route path='/' element={<Home />} />
                         <Route path='/auth' element={<Auth />} />
+                        <Route path='/account' element={<Account />} />
                     </Routes>
                 </Router>
             </UserContext.Provider>
