@@ -9,10 +9,11 @@
     border-collapse: collapse;
     width: 90%; 
     margin-top: 20px;
+    border: 1px solid black;
 }
 
 .centered-table th, .centered-table td {
-    border: 1px solid #ddd;
+    border: 1px solid #000000;
     text-align: left;
     padding: 8px;
 }
@@ -47,12 +48,13 @@
 
 .popup-content table {
     border-collapse: collapse;
+    border: 1px solid black;
     width: 100%;
 }
 
 .popup-content th,
 .popup-content td {
-    border: 1px solid #ddd;
+    border: 1px solid black;
     padding: 8px;
     text-align: left;
 }

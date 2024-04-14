@@ -16,9 +16,7 @@ function Dashboard() {
             const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
             try {
                 const accessToken = await useAccessToken()
-                if (!accessToken) {
-                    return navigate('/auth')
-                }
+                        
 
                 const response = await axios.get(`${apiURI}/orders`, {
                     headers: {
@@ -42,19 +40,23 @@ function Dashboard() {
 
     const OrderItemsPopup = () => (
         <div className="popup-overlay" onClick={() => setIsPopupVisible(false)}>
-            <div className="popup-content" onClick={e => e.stopPropagation()}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
                 <table>
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th className="quantity-header">Quantity</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Vegan</th>
                         </tr>
                     </thead>
                     <tbody>
                         {selectedOrderItems.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.Name}</td>
-                                <td className="quantity-cell">{item.Quantity}</td>
+                                <td>{item.Name}</td> 
+                                <td>{item.Price}</td>
+                                <td>{item.Quantity}</td>
+                                <td>{item.IsVegan ? 'Yes' : 'No'}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -69,27 +71,25 @@ function Dashboard() {
             <table className="centered-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Customer Name</th>
                         <th>Store Street Name</th>
                         <th>Status</th>
                         <th>Timestamp</th>
                         <th>Order Type</th>
                         <th>Delivery/Pickup Time</th>
-                        <th>Instructions</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     {orders.map(order => (
                         <tr key={order.orderID} onClick={() => handleRowClick(order.items)}>
-                            <td>{order.orderID}</td>
-                            <td>{`${order.customer.firstName} ${order.customer.lastName}`}</td>
+ <                          td>{`${order.customer.firstName} ${order.customer.lastName}`}</td>
                             <td>{order.store.street}</td>
                             <td>{order.status}</td>
                             <td>{order.timestamp}</td>
                             <td>{order.orderType}</td>
                             <td>{order.deliveryPickupTime}</td>
-                            <td>{order.instructions}</td>
+                            <td>{order.total !== null ? order.total : 'N/A'}</td> {/* Display Total or 'N/A' if null */}
                         </tr>
                     ))}
                 </tbody>

@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 
 function App() {
     const [user, setUser] = useState(null);
+
     const login = async (accessToken) => {
         const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`;
         try {
@@ -18,18 +19,27 @@ function App() {
                     "Authorization": `Bearer ${accessToken}`
                 }
             });
-
             setUser(response.data);
         } catch (err) {
             console.error(err);
+            setUser(null);  // Ensure user is null on failed login
         }
     };
-    const logout = () => setUser(null);
+
+    const logout = () => {
+        setUser(null);
+        // Redirect to login page if logout is triggered
+        window.location.href = '/auth';
+    };
 
     useEffect(() => {
         const getUser = async () => {
             const accessToken = await useAccessToken();
-            if (accessToken) await login(accessToken);
+            if (accessToken) {
+                await login(accessToken);
+            } else {
+                setUser(null);
+            }
         };
         getUser();
     }, []);
@@ -39,10 +49,9 @@ function App() {
             <Router>
                 <Navbar />
                 <Routes>
-                    <Route path='/' element={<Navigate replace to={user ? "/dashboard" : "/auth"} />} />
+                    <Route path='/' element={<Navigate replace to="/dashboard" />} />
                     <Route path='/auth' element={<Auth />} />
-                    {/* not protected anymore if logged in or not*/}
-                    <Route path='/dashboard' element={<Dashboard />} />
+                    <Route path='/dashboard' element={user ? <Dashboard /> : <Navigate replace to="/auth" />} />
                 </Routes>
             </Router>
         </UserContext.Provider>
