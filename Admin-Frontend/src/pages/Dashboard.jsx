@@ -47,7 +47,7 @@ function Dashboard() {
                             <th>Name</th>
                             <th>Price</th>
                             <th>Quantity</th>
-                            <th>Vegan</th>
+                            <th>Vegetarian</th>
                         </tr>
                     </thead>
                     <tbody>
