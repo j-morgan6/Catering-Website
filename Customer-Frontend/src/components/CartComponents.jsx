@@ -2,6 +2,8 @@ import { useState } from "react"
 import placeholderImage from "../assets/tempMenuData/placeholder.jpg"
 import 'material-icons/iconfont/material-icons.css'
 import '../pages/Cart.css'
+import { useAccessToken } from "../hooks/useAccessToken"
+import axios from "axios"
 
 function CartItemSection({orderItems, ChangeQuantity, RemoveItem}){
     
@@ -191,6 +193,89 @@ function OrderForm({user}){
                 break
             default:
                 console.log("tried to update a non-existant property in cust info change")
+        }
+    }
+
+    async function placeOrder(order) {
+        /**
+         * The structure of 'order' should be:
+        const order = {
+            store: (number) ID of the store to order from,
+            type: (string) can be either 'Delivery' or 'Pickup',
+            address: {
+                street: (string) street number and name (e.g. "123 Summit Ave."),
+                city: (string),
+                province: (string),
+                postal: (string)
+            },
+            due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
+            items: (array) [
+                item: (number),
+                quantity: (number)
+            ]
+        }
+
+         * If the "type" field is 'Pickup' do not provide an address
+         */
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
+        try {
+            const accessToken = await useAccessToken()
+        
+            await axios.post(`${apiURI}/orders/order`, order, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                withCredentials: true
+            })
+            
+            // Put whatever you want to happen when the order is successfully placed here
+        } catch (err) {
+            // handle errors here
+        }
+    }
+
+    async function placeGuestOrder(order) {
+        /**
+         * The structure of 'order' should be:
+        const order = {
+            guest: {
+                first_name: (string),
+                last_name: (string),
+                email: (string),
+                phone: (string),
+                company: (string)
+            }
+            store: (number) ID of the store to order from,
+            type: (string) can be either 'Delivery' or 'Pickup',
+            address: {
+                street: (string) street number and name (e.g. "123 Summit Ave."),
+                city: (string),
+                province: (string),
+                postal: (string)
+            },
+            due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
+            items: (array) [
+                item: (number),
+                quantity: (number)
+            ]
+        }
+
+         * If the "type" field is 'Pickup' do not provide an address
+         */
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
+        try {
+            const accessToken = await useAccessToken()
+        
+            await axios.post(`${apiURI}/orders/guest-order`, order, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                withCredentials: true
+            })
+            
+            // Put whatever you want to happen when the order is successfully placed here
+        } catch (err) {
+            // handle errors here
         }
     }
 
