@@ -1,11 +1,85 @@
+/* Footer styling */
 .footer {
     width: 100%;
-    height: 60px;
     background-color: #EF3825;
-    color: #fff;
+    color: white;
+    padding: 20px;
     text-align: center;
-    line-height: 60px;
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center items vertically */
+    z-index: 1000; /* Ensure the footer is above other elements */
+    position: relative; /* Add relative positioning */
+}
+
+.footer-content {
+    display: flex; /* Display the content horizontally */
+    justify-content: space-between; /* Align items with equal space between them */
+    align-items: center; /* Center items vertically */
+    width: 100%; /* Ensure the content takes up full width */
+    position: relative; /* Add relative positioning */
+}
+
+.footer-info-left {
+    flex: 0 0 33.33%; /* Restrict left section to one-third of the page width */
+    text-align: center; /* Align text to the center */
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.footer-info-right,
+.footer-info-center {
+    text-align: center; /* Align text to the center */
+}
+
+.footer-info-center {
+    position: absolute; /* Add absolute positioning */
+    left: 50%; /* Move the container to the horizontal center */
+    transform: translateX(-50%); /* Adjust to center the logo within the container */
+    top: 55%; /* Move the container to the vertical center */
+    margin-top: -50px; /* Adjust to vertically center the logo */
+}
+
+.footer-info-right {
     position: absolute;
-    bottom: 0;
-  }
-  
+    right: 0; /* Align to the right */
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center items vertically */
+    gap: 10px;
+}
+
+.footer-info-right p {
+    font-size: 24;
+    font-weight: bold;
+    color: white;
+}
+
+/* Styling for the logo */
+.footer-info-center img {
+    width: 200px; /* Adjust the width of the logo */
+    align-items: center;
+    height: auto;
+}
+
+/* Styling for the social media icons */
+.footer-info-right img {
+    width: 48px; /* Adjust the width of the social media icons */
+    margin-right: 5px; /* Add some margin between icons */
+}
+
+/* Styling for the black bar */
+.black-bar {
+    position: absolute; /* Position the black bar absolutely */
+    top: 100%; /* Place it below the red part of the footer */
+    left: 0;
+    width: 100%;
+    height: 48px; /* Height of the black bar */
+    background-color: #000; /* Black color */
+}
+
+.copy-right-text {
+    position: absolute;
+    top: 112%;
+    right: 20px; /* Adjust as needed */
+    color: darkgrey;
+    font-size: 14px;
+}
