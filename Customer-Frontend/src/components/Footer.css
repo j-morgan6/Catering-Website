@@ -1,49 +1,48 @@
-/* Footer styling */
 .footer {
     width: 100%;
     background-color: #EF3825;
     color: white;
     padding: 20px;
     text-align: center;
-    display: flex; /* Use flexbox */
-    align-items: center; /* Center items vertically */
-    z-index: 1000; /* Ensure the footer is above other elements */
-    position: relative; /* Add relative positioning */
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    position: relative;
 }
 
 .footer-content {
-    display: flex; /* Display the content horizontally */
-    justify-content: space-between; /* Align items with equal space between them */
-    align-items: center; /* Center items vertically */
-    width: 100%; /* Ensure the content takes up full width */
-    position: relative; /* Add relative positioning */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
 }
 
 .footer-info-left {
-    flex: 0 0 33.33%; /* Restrict left section to one-third of the page width */
-    text-align: center; /* Align text to the center */
+    flex: 0 0 33.33%;
+    text-align: center;
     font-weight: bold;
     font-size: 14px;
 }
 
 .footer-info-right,
 .footer-info-center {
-    text-align: center; /* Align text to the center */
+    text-align: center;
 }
 
 .footer-info-center {
-    position: absolute; /* Add absolute positioning */
-    left: 50%; /* Move the container to the horizontal center */
-    transform: translateX(-50%); /* Adjust to center the logo within the container */
-    top: 55%; /* Move the container to the vertical center */
-    margin-top: -50px; /* Adjust to vertically center the logo */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 55%;
+    margin-top: -50px;
 }
 
 .footer-info-right {
     position: absolute;
-    right: 0; /* Align to the right */
-    display: flex; /* Use flexbox */
-    align-items: center; /* Center items vertically */
+    right: 0;
+    display: flex;
+    align-items: center;
     gap: 10px;
 }
 
@@ -53,33 +52,30 @@
     color: white;
 }
 
-/* Styling for the logo */
 .footer-info-center img {
-    width: 200px; /* Adjust the width of the logo */
+    width: 200px;
     align-items: center;
     height: auto;
 }
 
-/* Styling for the social media icons */
 .footer-info-right img {
-    width: 48px; /* Adjust the width of the social media icons */
-    margin-right: 5px; /* Add some margin between icons */
+    width: 48px;
+    margin-right: 5px;
 }
 
-/* Styling for the black bar */
 .black-bar {
-    position: absolute; /* Position the black bar absolutely */
-    top: 100%; /* Place it below the red part of the footer */
+    position: absolute;
+    top: 100%;
     left: 0;
     width: 100%;
-    height: 48px; /* Height of the black bar */
-    background-color: #000; /* Black color */
+    height: 48px;
+    background-color: black;
 }
 
 .copy-right-text {
     position: absolute;
     top: 112%;
-    right: 20px; /* Adjust as needed */
+    right: 20px;
     color: darkgrey;
     font-size: 14px;
 }
