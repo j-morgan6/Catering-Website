@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
         end_date: joi.date().optional(),
         customer: joi.number().optional(),
         store: joi.number().optional(),
-        type: joi.string().valid('pickup', 'delivery').optional(),
+        type: joi.string().valid('Pickup', 'Delivery').optional(),
         min_price: joi.number().optional(),
         max_price: joi.number().optional(),
     })
@@ -92,7 +92,7 @@ router.get('/', (req, res) => {
         const orders = []
 
         for (const orderInfo of orderResponse) {
-            const itemsResponse = orderItemsStmt.all({ orderID: orderResponse.ID })
+            const itemsResponse = orderItemsStmt.all({ orderID: orderInfo.ID })
 
             const order = {
                 orderID: orderInfo.ID,
@@ -121,6 +121,62 @@ router.get('/', (req, res) => {
 
         res.send(orders)
     } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            error: {
+                code: StatusCodes.INTERNAL_SERVER_ERROR,
+                reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                message: err.message ? err.message : "The server encountered an error."
+            }
+        })
+    }
+})
+
+router.post('/order', (req, res) => {
+    const schema = joi.object({
+        customer: joi.number().required(),
+        store: joi.number().required(),
+        type: joi.string().valid('Delivery', 'Pickup').required(),
+        delivery_pickup_time: joi.date(),
+        items: joi.array().items(joi.object({
+            item: joi.number().required(),
+            quantity: joi.number().required()
+        })).min(1).required()
+    })
+
+    const validationResult = schema.validate(req.body)
+    if (validationResult.error) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            error: {
+                code: StatusCodes.BAD_REQUEST,
+                reason: ReasonPhrases.BAD_REQUEST,
+                message: validationResult.error.message
+            }
+        })
+        return
+    }
+
+    const transaction = Database.transaction(() => {
+        const orderStmt = Database.prepare('INSERT INTO `Order` (CustomerID, StoreID, OrderType, DeliveryPickupTime) VALUES ($customer, $store, $type, $delivery_pickup_time)')
+        const itemStmt = Database.prepare('INSERT INTO OrderItem (OrderID, MenuItemID, Quantity) VALUES ($order, $item, $quantity)')
+
+        const orderID = orderStmt.run(req.body).lastInsertRowid
+        console.log(orderID)
+
+        for (const item of req.body.items) {
+            item.order = orderID
+            itemStmt.run(item)
+        }
+
+        res.send({
+            success: true,
+            orderID: orderID
+        })
+    })
+
+    try {
+        transaction()
+    } catch (err) {
+        console.log(err)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             error: {
                 code: StatusCodes.INTERNAL_SERVER_ERROR,

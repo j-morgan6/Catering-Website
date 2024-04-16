@@ -94,8 +94,6 @@ router.put('/', (req, res) => {
         'phone': 'Authentication'
     }
 
-    // const customerQuery = 'UPDATE Customer SET'
-    // const authenticationQuery = 'UPDATE CustomerAuthentication SET'
     let customerQuery = ''
     let authenticationQuery = ''
 
@@ -414,6 +412,10 @@ router.get('/order/:orderID', (req, res) => {
             }
         })
     }
+})
+
+router.post('/order', (req, res) => {
+    
 })
 
 module.exports = {
