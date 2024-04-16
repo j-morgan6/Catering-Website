@@ -1,6 +1,7 @@
 import {React, useState, useEffect, useContext} from "react";
 import Cookies from "js-cookie";
 import { CartItemSection, OrderForm } from "../components/CartComponents";
+import { UserContext } from "../hooks/useUser";
 
 export default function Cart(){
     const {user} = useContext(UserContext)
@@ -56,7 +57,7 @@ export default function Cart(){
                 ChangeQuantity={ChangeQuantity}
                 RemoveItem={RemoveItem}
             />
-            <OrderForm/>
+            <OrderForm user={user}/>
         </div>
         <div className="extraSpace"></div>
     </div>
