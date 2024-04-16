@@ -9,7 +9,7 @@
     border-collapse: collapse;
     width: 90%; 
     margin-top: 20px;
-    border: 1px solid black;
+    border: 3px solid black;
 }
 
 /* Set the background color for every other row */
@@ -29,7 +29,7 @@
 
 /* Borders and text alignment for th and td */
 .centered-table th, .centered-table td {
-    border: 1px solid #000000;
+    border: 3px solid #000000;
     text-align: center;
     padding: 8px;
 }
