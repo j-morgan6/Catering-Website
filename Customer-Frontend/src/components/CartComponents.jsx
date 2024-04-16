@@ -93,6 +93,7 @@ function CartQuantityBar({orderItem, ChangeQuantity}){
 }
 
 function OrderForm({user}){
+    const [formStatus, setFormStatus] = useState("notReady")
     const[loggedIn, setLoggedIn] = useState("false")
     const [customerInfo, setCustomerInfo] = useState({
         firstName: "",
@@ -103,7 +104,7 @@ function OrderForm({user}){
     })
     const [formData, setFormData] = useState({
         store: "",
-        orderType: "",
+        type: "",
         deliveryInfo: {
             address: "",
             aptNumber: "",
@@ -112,9 +113,30 @@ function OrderForm({user}){
             province: "ON",
             country: "Canada"
         },
-        deliveryPickupTime: "",
+        delivery_pickup_time: "",
         instructions: ""
     })
+
+    function TryUpdateStatus(){
+        if(formStatus === "notReady"){ //see if can now update to ready to submit form
+            let canSetReady = true
+            if(!user){ //must have user fields filled out
+                if(!customerInfo.firstName || !customerInfo.lastName || !customerInfo.phone 
+                    || !customerInfo.email || !customerInfo.company)
+                    canSetReady = false
+            }
+            
+            if(!formData.store || !formData.type || !formData.delivery_pickup_time)
+                canSetReady = false
+
+            if(formData.type === "Delivery"){ //make sure delivery fields filled out
+                if(!formData.deliveryInfo.address || !formData.deliveryInfo.city || !formData.deliveryInfo.postalCode)
+                    canSetReady = false
+            }
+
+            if(canSetReady) setFormStatus("ready")
+        }
+    }
 
     function OnFormChange(propertyName, newVal){
         let newFormData = JSON.parse(JSON.stringify(formData))
@@ -122,8 +144,8 @@ function OrderForm({user}){
             case "store":
                 newFormData.store = newVal
                 break
-            case "orderType":
-                newFormData.orderType = newVal
+            case "type":
+                newFormData.type = newVal
                 break
             case "address":
                 newFormData.deliveryInfo.address = newVal
@@ -137,8 +159,8 @@ function OrderForm({user}){
             case "postalCode":
                 newFormData.deliveryInfo.postalCode = newVal
                 break
-            case "deliveryPickupTime":
-                newFormData.deliveryPickupTime = newVal
+            case "delivery_pickup_time":
+                newFormData.delivery_pickup_time = newVal
                 break;
             case "instructions":
                 newFormData.instructions = newVal
@@ -206,18 +228,18 @@ function OrderForm({user}){
                     <option>81 Front St E, Toronto, ON M5E 1B8, Canada</option>
                 </select>
                 <label htmlFor="typeDropdown">Order type</label>
-                <select name="orderType" id="typeDropdown" value={formData.orderType}
-                    onChange={(e) => OnFormChange("orderType", e.target.value)}>
+                <select name="type" id="typeDropdown" value={formData.type}
+                    onChange={(e) => OnFormChange("type", e.target.value)}>
                     <option></option>
-                    <option value="pickup">Pickup</option>
-                    <option value="delivery">Delivery</option>
+                    <option value="Pickup">Pickup</option>
+                    <option value="Delivery">Delivery</option>
                 </select>
                 <label htmlFor="deliveryPickupTimeInput">Delivery/Pickup Time</label>
-                <input name="deliveryPickupTime" type="datetime-local" id="deliveryPickupTimeInput" 
+                <input name="delivery_pickup_time" type="datetime-local" id="deliveryPickupTimeInput" 
                         value={formData.deliveryPickupTime}
-                        onChange={(e) => OnFormChange("deliveryPickupTime", e.target.value)}/>
+                        onChange={(e) => OnFormChange("delivery_pickup_time", e.target.value)}/>
             </div>
-            {formData.orderType === "delivery" && 
+            {formData.type === "Delivery" && 
                 <div className="formSection deliveryInfo">
                     <h3 className="formSectionTitle">Delivery Details</h3>
                     <label htmlFor="addrInput">Address</label>
