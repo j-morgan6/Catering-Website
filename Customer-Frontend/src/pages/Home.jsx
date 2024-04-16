@@ -8,7 +8,7 @@ function Home() {
       <div className='left-half'>
         <div className='home-content'>
           <h1>Our Secret</h1>
-          <p>We strive to find the finest ingredient by only selecting only the freshest produce. We priotize locally grown ingredients to ensure the freshest, most flavorful dishes. All while supporting local farmers.</p>
+          <p>We strive to bring you the finest ingredient by only selecting the freshest produce. We priotize locally grown ingredients to ensure the freshest, most flavorful dishes. All while supporting local farmers.</p>
         </div>
       </div>
       <div className='right-half'>
