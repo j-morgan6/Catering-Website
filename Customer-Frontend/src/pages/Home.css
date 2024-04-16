@@ -23,6 +23,7 @@
 
 .home-content h1 {
     font-size: 96px;
+    font-weight: bold;
     max-width: 500px;
     line-height: 1;
 }
