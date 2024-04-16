@@ -11,6 +11,7 @@ function Dashboard() {
     const [isUpdateStatusVisible, setIsUpdateStatusVisible] = useState(false);
     const [currentOrderForUpdate, setCurrentOrderForUpdate] = useState(null);
     const [newStatus, setNewStatus] = useState('');
+    const [filters, setFilters] = useState({status: '',timestamp: '',price: ''});
 
     const navigate = useNavigate();
 
