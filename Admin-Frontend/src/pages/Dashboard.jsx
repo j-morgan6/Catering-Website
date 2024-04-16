@@ -130,6 +130,7 @@ function Dashboard() {
                         <th>Order Type</th>
                         <th>Delivery/Pickup Time</th>
                         <th>Total</th>
+                        <th>Operations</th>
                     </tr>
                 </thead>
                 <tbody>
