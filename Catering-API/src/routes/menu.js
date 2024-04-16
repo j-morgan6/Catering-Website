@@ -36,7 +36,7 @@ router.get('/items', (req, res) => {
     for (const filter in req.body) if (filterMap[filter]) filters.push(filterMap[filter])
     const filterStr = filters.join(' AND ')
 
-    stmt = Database.prepare(`SELECT * FROM MenuItem WHERE Category IN ('Breakfast', 'Lunch', 'À la Carte', 'Beverages', 'Dessert') ${filterStr ? `AND ${filterStr}` : ''}`)
+    stmt = Database.prepare(`SELECT * FROM MenuItem ${filterStr ? `WHERE ${filterStr}` : ''}`)
 
     try {
         const response = stmt.all(req.body)
