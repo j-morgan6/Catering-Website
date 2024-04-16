@@ -12,19 +12,34 @@
     border: 1px solid black;
 }
 
+/* Set the background color for every other row */
+.centered-table tbody tr:nth-child(odd) {
+    background-color: transparent;
+}
+
+/* Set a different background color for even rows */
+.centered-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Reset the background color for the last column in all rows */
+.centered-table tbody tr td:last-child {
+    background-color: transparent !important; 
+}
+
+/* Borders and text alignment for th and td */
 .centered-table th, .centered-table td {
     border: 1px solid #000000;
     text-align: left;
     padding: 8px;
 }
 
+/* Background color for the header cells */
 .centered-table th {
     background-color: #f2f2f2;
 }
 
-.centered-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
+
 
 .popup-overlay {
     position: fixed;
@@ -36,14 +51,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000; 
 }
 
 .popup-content {
     background: white;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     cursor: auto;
+    border: 2px solid #ccc;
+    max-width: 80%; 
+    max-height: 80%; 
+    overflow: auto; 
+    position: relative; 
 }
 
 .popup-content table {
@@ -69,4 +90,64 @@
     margin: 20px auto;
     padding: 10px 20px;
     cursor: pointer;
+}
+
+.update-status-btn {
+    font-size: 14px;
+    background-color: #4CAF50; 
+    color: rgb(0, 0, 0);
+    border-radius: 4px; 
+    cursor: pointer; 
+    outline: none; 
+    transition: background-color 0.3s; 
+}
+
+.update-status-btn:hover {
+    background-color: #000e01; 
+}
+
+.update-status-btn:focus {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
+
+.view-order-btn {
+    font-size: 14px;
+    background-color: #4670ca; 
+    color: rgb(0, 0, 0);
+    border-radius: 4px; 
+    cursor: pointer; 
+    outline: none; 
+    transition: background-color 0.3s; 
+}
+
+.view-order-btn:hover {
+    background-color: rgb(25, 40, 175);
+}
+
+.view-order-btn:focus {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
+
+.delete-button {
+    font-size: 14px;
+    background-color: #dd3d3d; 
+    color: rgb(0, 0, 0);
+    border-radius: 4px; 
+    cursor: pointer; 
+    outline: none; 
+    transition: background-color 0.3s; 
+}
+
+.delete-button:hover {
+    background-color: darkred;
+}
+
+.delete-button:focus {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
+
+.update-status-btn, .delete-button, .view-order-btn {
+    padding: 10px 7px;
+    margin: 0 5px 0 0; 
+    white-space: nowrap; 
 }
