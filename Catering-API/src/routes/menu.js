@@ -58,11 +58,11 @@ router.get('/items', (req, res) => {
     }
 })
 
-router.get('/items', (req, res) => {
+router.get('/variant', (req, res) => {
     const filterSchema = joi.object({
+        category: joi.string().required(),
         min_price: joi.number().optional(),
-        max_price: joi.number().optional(),
-        category: joi.string().optional()
+        max_price: joi.number().optional()
     })
 
     const filterValidationResult = filterSchema.validate(req.body)

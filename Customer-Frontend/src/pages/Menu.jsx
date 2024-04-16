@@ -4,6 +4,8 @@ import { CategoryCard, MenuItemCard, ExpandedItemSection } from "../components/M
 import './Menu.css'
 import { useParams, Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useAccessToken } from "../hooks/useAccessToken";
+import axios from "axios";
 
 export default function Menu(){
     const { categoryParam, itemParam} = useParams();
@@ -18,6 +20,18 @@ export default function Menu(){
             setOrderItems(newOrderItems)
             console.log(`GET cart cookies to:\n`, newOrderItems)
         }
+
+        const getMenuItems = async () => {
+            const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
+            try {
+                const accessToken = await useAccessToken()
+
+                const menuItems = (await axios.get(`${apiURI}/menu/items`)).data
+            } catch (err) {
+
+            }
+        }
+        getMenuItems
     }, [])
 
     //update cart cookie when orderItems changes

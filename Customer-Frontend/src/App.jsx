@@ -8,6 +8,8 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Auth from './pages/Auth'
 import Account from './pages/Account'
+import Menu from './pages/Menu'
+import Cart from './pages/Cart'
 
 function App() {
 
@@ -51,6 +53,10 @@ function App() {
                         <Route path='/' element={<Home />} />
                         <Route path='/auth' element={<Auth />} />
                         <Route path='/account' element={<Account />} />
+                        <Route path='/menu' element={<Menu />} />
+                        <Route path='/menu/:categoryParam' element={<Menu />} />
+                        <Route path='/menu/:categoryParam/:itemParam' element={<Menu />} />
+                        <Route path='/cart' element={<Cart />} />
                     </Routes>
                 </Router>
             </UserContext.Provider>
