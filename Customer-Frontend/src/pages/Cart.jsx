@@ -30,7 +30,7 @@ export default function Cart(){
     function ChangeQuantity(updatedOrderItem){
         let newOrderItems = JSON.parse(JSON.stringify(orderItems)) //deepcopy
         const i = newOrderItems.findIndex((orderItem) =>
-            orderItem.name === updatedOrderItem.name
+            orderItem.Name === updatedOrderItem.Name
         )
         if(i !== -1){
             newOrderItems[i].quantity = updatedOrderItem.quantity
@@ -41,7 +41,7 @@ export default function Cart(){
 
     function RemoveItem(itemToRemove){
         const newOrderItems = orderItems.filter((item) =>
-            item.name !== itemToRemove.name
+            item.Name !== itemToRemove.Name
         )
         if(newOrderItems.length == 0) setJustEmptiedCart(true)
         setOrderItems(newOrderItems)

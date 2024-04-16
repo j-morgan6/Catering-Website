@@ -20,15 +20,15 @@ function MenuItemCard({item}){
     const currentPath = useLocation().pathname
 
     return(
-        <Link className="card itemCard" to={currentPath + "/" + item.path}>
-            {(item.imageURL !== "") ? (
-                <img className="menuImg" src={item.imageURL}/>
+        <Link className="card itemCard" to={currentPath + "/" + item.Path}>
+            {(item.ImageURL !== "") ? (
+                <img className="menuImg" src={item.ImageURL}/>
             ) : (
                 <img className="menuImg" src={placeholderImage}/>
             )}
             <div className="cardBar">
-                {item.vegetarian && <img className="vegLogo" src={vegLogo}/>}
-                <h2 className="cardTitle">{item.name}</h2>
+                {item.IsVegetarian && <img className="vegLogo" src={vegLogo}/>}
+                <h2 className="cardTitle">{item.Name}</h2>
             </div>
         </Link>
     );
@@ -38,12 +38,12 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
     const [justAdded, setJustAdded] = useState(false);
     const [quantities, setQuantities] = useState((options.length !== 0) ? options.map((option) => {
         return({
-            optionName: option.name,
+            optionName: option.Name,
             quantity: 0
         });
     }) : (
         [{
-            optionName: expandedItem.name,
+            optionName: expandedItem.Name,
             quantity: 0
         }]
     ))
@@ -58,7 +58,7 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
     function PlusPressed(item){
         if(justAdded) setJustAdded(false)
         const itemIndex = quantities.findIndex((quantity) =>
-            quantity.optionName === item.name
+            quantity.optionName === item.Name
         )
         if(itemIndex !== -1){
             const newQuantities = quantities.map((quantity) => {
@@ -74,7 +74,7 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
     function SubPressed(item){
         if(justAdded) setJustAdded(false)
         const itemIndex = quantities.findIndex((quantity) =>
-            quantity.optionName === item.name
+            quantity.optionName === item.Name
         )
         if(itemIndex !== -1){
             const newQuantities = quantities.map((quantity) => {
@@ -90,7 +90,7 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
     function InputChanged(e, item){
         if(justAdded) setJustAdded(false)
         const itemIndex = quantities.findIndex((quantity) =>
-            quantity.optionName === item.name
+            quantity.optionName === item.Name
         )
         if(itemIndex !== -1){
             const newQuantities = quantities.map((quantity) => {
@@ -104,20 +104,20 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
 
     function GetQuantity(item){
         const itemQuant = quantities.find((quantity) => 
-            quantity.optionName === item.name
+            quantity.optionName === item.Name
         )
         return itemQuant.quantity
     }
 
     function GetPrice(itemName){
-        if(expandedItem.name == itemName)
-            return expandedItem.price
+        if(expandedItem.Name == itemName)
+            return expandedItem.Price
         else{
             const matchingItem = options.find((option) =>
-                option.name === itemName
+                option.Name === itemName
             )
             if(matchingItem !== undefined)
-                return matchingItem.price
+                return matchingItem.Price
             else
                 console.log("couldnt find price of item")
         }
@@ -139,17 +139,17 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
     return(
         <div>
             <div className="expanded">
-                {(expandedItem.imageURL !== "") ? (
-                    <img className="expImg" src={expandedItem.imageURL}/>
+                {(expandedItem.ImageURL !== "") ? (
+                    <img className="expImg" src={expandedItem.ImageURL}/>
                 ) : (
                     <img className="expImg" src={placeholderImage}/>
                 )}
                 <div className="infoSec">
                     <h2 className="expTitle">
-                        {(options.length !== 0) ? expandedItem.name 
-                            : expandedItem.name + " $" + expandedItem.price}
+                        {(options.length !== 0) ? expandedItem.Name 
+                            : expandedItem.Name + " $" + expandedItem.Price}
                     </h2>
-                    {expandedItem.description !== "" && <p className="itemDesc">{expandedItem.description}</p>}
+                    {expandedItem.Description !== "" && <p className="itemDesc">{expandedItem.Description}</p>}
                     {  
                     (options.length === 0) ? (
                         <div className="quantContainer">
@@ -165,7 +165,7 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
                         <div className="optionContainer">
                             {options.map((option) =>
                                 <Option 
-                                    key={option.name} 
+                                    key={option.ID} 
                                     item={option}
                                     GetQuantity={GetQuantity}
                                     PlusPressed={PlusPressed}
@@ -197,8 +197,8 @@ function Option({item, GetQuantity, PlusPressed, SubPressed, InputChanged}){
     return(
         <div className="option">
             <div className="optionLeft">
-                <h5>{item.name + " $" + item.price}</h5>
-                {item.vegetarian && 
+                <h5>{item.Name + " $" + item.Price}</h5>
+                {item.IsVegetarian && 
                     <img className="vegLogo" src={vegLogo}/>}
             </div>
             <QuantityBar 

@@ -7,7 +7,7 @@ function CartItemSection({orderItems, ChangeQuantity, RemoveItem}){
     
     let total = 0
     orderItems.forEach((orderItem) =>
-        total += (orderItem.price * orderItem.quantity)
+        total += (orderItem.Price * orderItem.quantity)
     )
 
     return(
@@ -17,7 +17,7 @@ function CartItemSection({orderItems, ChangeQuantity, RemoveItem}){
             {
                 orderItems.map((orderItem) => 
                     <CartItem 
-                        key={orderItem.name}
+                        key={orderItem.Name}
                         orderItem={orderItem}
                         ChangeQuantity={ChangeQuantity}
                         RemoveItem={RemoveItem}
@@ -31,7 +31,7 @@ function CartItemSection({orderItems, ChangeQuantity, RemoveItem}){
 
 function CartItem({orderItem, ChangeQuantity, RemoveItem}){
 
-    const subtotal = Number(orderItem.quantity) * Number(orderItem.price)
+    const subtotal = Number(orderItem.quantity) * Number(orderItem.Price)
     const subtotalStr = subtotal.toFixed(2)
 
     return(
@@ -42,12 +42,12 @@ function CartItem({orderItem, ChangeQuantity, RemoveItem}){
                 className="leftSidePart x material-icons">
             close
             </span>
-            {(orderItem.imageURL) ? (
-                <img className="leftSidePart cartItemImg" src={orderItem.imageURL} alt={orderItem.name} />
+            {(orderItem.ImageURL) ? (
+                <img className="leftSidePart cartItemImg" src={orderItem.ImageURL} alt={orderItem.Name} />
             ) : (
-                <img className="leftSidePart cartItemImg" src={placeholderImage} alt={orderItem.name}/>
+                <img className="leftSidePart cartItemImg" src={placeholderImage} alt={orderItem.Name}/>
             )}
-            <h5 className="leftSidePart">{orderItem.name}</h5>
+            <h5 className="leftSidePart">{orderItem.Name}</h5>
         </div>
         <div className="itemRightSide">
             <h5 className="rightSidePart">${subtotalStr}</h5>
