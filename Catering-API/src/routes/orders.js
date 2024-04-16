@@ -1,6 +1,6 @@
 const express = require('express')
 const joi = require('joi')
-const { AdminTokens } = require('../functions/tokens')
+const { AdminTokens, CustomerTokens } = require('../functions/tokens')
 const { extractAuthToken } = require('../functions/authorization')
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
 const { Database } = require('../database')
@@ -132,11 +132,114 @@ router.get('/', (req, res) => {
 })
 
 router.post('/order', (req, res) => {
+    // Get authorization token
+    const token = extractAuthToken(req.headers.authorization)
+
+    const payload = CustomerTokens.validate(token)
+    if (!payload) {
+        res.status(StatusCodes.UNAUTHORIZED).send({
+            error: {
+                code: StatusCodes.UNAUTHORIZED,
+                reason: ReasonPhrases.UNAUTHORIZED,
+                message: "Invaliad authorization token."
+            }
+        })
+        return
+    }
+
     const schema = joi.object({
-        customer: joi.number().required(),
         store: joi.number().required(),
         type: joi.string().valid('Delivery', 'Pickup').required(),
-        delivery_pickup_time: joi.date(),
+        address: joi.object({
+            street: joi.string().required(),
+            city: joi.string().required(),
+            province: joi.string().required(),
+            postal: joi.string().required()
+        }).optional(),
+        due_date: joi.date(),
+        items: joi.array().items(joi.object({
+            item: joi.number().required(),
+            quantity: joi.number().required()
+        })).min(1).required()
+    })
+
+    const validationResult = schema.validate(req.body)
+    if (validationResult.error) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            error: {
+                code: StatusCodes.BAD_REQUEST,
+                reason: ReasonPhrases.BAD_REQUEST,
+                message: validationResult.error.message
+            }
+        })
+        return
+    }
+
+    req.body.customer = payload.id
+
+    const transaction = Database.transaction(() => {
+        const orderStmt = Database.prepare('INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate) VALUES ($customer, $store, $type, $due_date)')
+        const itemStmt = Database.prepare('INSERT INTO OrderItem (OrderID, MenuItemID, Quantity) VALUES ($order, $item, $quantity)')
+        
+        const orderDetails = {
+            customer: req.body.customer,
+            store: req.body.store,
+            type: req.body.type,
+            due_date: req.body.due_date,
+        }
+        if (req.body.type == 'Delivery') {
+            orderDetails.street = req.body.address.street
+            orderDetails.city = req.body.address.city
+            orderDetails.province = req.body.address.province
+            orderDetails.postal = req.body.address.postal
+        }
+
+        const orderID = orderStmt.run(req.body).lastInsertRowid
+        console.log(orderID)
+
+        for (const item of req.body.items) {
+            item.order = orderID
+            itemStmt.run(item)
+        }
+
+        res.send({
+            success: true,
+            orderID: orderID
+        })
+    })
+
+    try {
+        transaction()
+    } catch (err) {
+        console.log(err)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            error: {
+                code: StatusCodes.INTERNAL_SERVER_ERROR,
+                reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                message: err.message ? err.message : "The server encountered an error."
+            }
+        })
+    }
+})
+
+router.post('/guest-order', (req, res) => {
+    const schema = joi.object({
+        guest: joi.object({
+            first_name: joi.string().required(),
+            last_name: joi.string().required(),
+            email: joi.string().email().required(),
+            phone: joi.string().required(),
+            company: joi.string().required()
+        }).required(),
+        store: joi.number().required(),
+        type: joi.string().valid('Delivery', 'Pickup').required(),
+        address: joi.object({
+            street: joi.string().required(),
+            city: joi.string().required(),
+            province: joi.string().required(),
+            postal: joi.string().required()
+        }).optional(),
+        due_date: joi.date(),
         items: joi.array().items(joi.object({
             item: joi.number().required(),
             quantity: joi.number().required()
@@ -156,11 +259,32 @@ router.post('/order', (req, res) => {
     }
 
     const transaction = Database.transaction(() => {
-        const orderStmt = Database.prepare('INSERT INTO `Order` (CustomerID, StoreID, OrderType, DeliveryPickupTime) VALUES ($customer, $store, $type, $delivery_pickup_time)')
+        // create the guest user
+        const guestStmt = Database.prepare('INSERT INTO Guest (FirstName, LastName, Email, Phone, Company) VALUES ($first_name, $last_name, $email, $phone, $company)')
+
+        let orderQuery
+        if (req.body.type == 'Delivery') orderQuery = 'INSERT INTO `Order` (GuestID, StoreID, OrderType, DueDate, DeliveryStreet, DeliveryCity, DeliveryProvince, DeliveryPostalCode) VALUES ($guest, $store, $type, $due_date, $street, $city, $province, $postal)'
+        else orderQuery = 'INSERT INTO `Order` (GuestID, StoreID, OrderType, DueDate) VALUES ($guest, $store, $type, $due_date)'
+        const orderStmt = Database.prepare(orderQuery)
+
         const itemStmt = Database.prepare('INSERT INTO OrderItem (OrderID, MenuItemID, Quantity) VALUES ($order, $item, $quantity)')
 
-        const orderID = orderStmt.run(req.body).lastInsertRowid
-        console.log(orderID)
+        const guestID = guestStmt.run(req.body.guest).lastInsertRowid
+        console.log(`Guest: ${guestID}`)
+
+        const orderDetails = {
+            guest: guestID,
+            store: req.body.store,
+            type: req.body.type,
+            due_date: req.body.due_date,
+        }
+        if (req.body.type == 'Delivery') {
+            orderDetails.street = req.body.address.street
+            orderDetails.city = req.body.address.city
+            orderDetails.province = req.body.address.province
+            orderDetails.postal = req.body.address.postal
+        }
+        const orderID = orderStmt.run(orderDetails).lastInsertRowid
 
         for (const item of req.body.items) {
             item.order = orderID
