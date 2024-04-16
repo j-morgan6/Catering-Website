@@ -92,8 +92,7 @@ function CartQuantityBar({orderItem, ChangeQuantity}){
     )
 }
 
-function OrderForm({}){
-    //TODO: get user context to conditionally render customer info/display info
+function OrderForm({user}){
     const[loggedIn, setLoggedIn] = useState("false")
     const [customerInfo, setCustomerInfo] = useState({
         firstName: "",
@@ -176,7 +175,7 @@ function OrderForm({}){
     return(
     <div className="informationSection"> 
         <form className="orderForm">
-            { !loggedIn &&
+            { !user &&
                 <div className="formSection customerInfo">
                     <h2 className="formSectionTitle">Customer Information</h2>
                     <label htmlFor="firstNameInput">First Name</label>
@@ -247,8 +246,6 @@ function OrderForm({}){
                 ></textarea>
             </div>
         </form>
-        {/* temp button for testing purposes */}
-        <button onClick={() => setLoggedIn(!loggedIn)}>{loggedIn ? "logout" : "login"}</button>
     </div>
     );
 }
