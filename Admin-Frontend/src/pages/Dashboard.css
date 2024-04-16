@@ -30,7 +30,7 @@
 /* Borders and text alignment for th and td */
 .centered-table th, .centered-table td {
     border: 1px solid #000000;
-    text-align: left;
+    text-align: center;
     padding: 8px;
 }
 
