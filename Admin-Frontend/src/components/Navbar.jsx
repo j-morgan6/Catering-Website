@@ -24,8 +24,8 @@ function Navbar() {
                 </Link>
                 <div id='navbar-links'>
                     {user && currentPath !== '/auth' && (<Link className='navbar-link' to='/dashboard'>Orders</Link>)}
-                    {user && (<Link className='navbar-link' to='/profile'>{user.FirstName} {user.LastName}</Link>)}
-                    <Link to="/auth" onClick={handleLogout} className="navbar-link" role="button">Logout</Link>
+                    {/*user && (<Link className='navbar-link' to='/profile'>{user.FirstName} {user.LastName}</Link>)}
+                    {user && <Link to="/auth" onClick={handleLogout} className="navbar-link" role="button">Logout</Link>*/}
                 </div>
             </div>
         </div>
