@@ -21,13 +21,13 @@ function MenuItemCard({item}){
 
     return(
         <Link className="card itemCard" to={currentPath + "/" + item.Path}>
-            {(item.ImageURL !== "") ? (
+            {(item.ImageURL) ? (
                 <img className="menuImg" src={item.ImageURL}/>
             ) : (
                 <img className="menuImg" src={placeholderImage}/>
             )}
             <div className="cardBar">
-                {item.IsVegetarian && <img className="vegLogo" src={vegLogo}/>}
+                {item.IsVegetarian == 1 && <img className="vegLogo" src={vegLogo}/>}
                 <h2 className="cardTitle">{item.Name}</h2>
             </div>
         </Link>
@@ -137,9 +137,9 @@ function ExpandedItemSection({expandedItem, options, AddItemsToOrder}){
     }
 
     return(
-        <div>
+        <div className="outerExp">
             <div className="expanded">
-                {(expandedItem.ImageURL !== "") ? (
+                {(expandedItem.ImageURL) ? (
                     <img className="expImg" src={expandedItem.ImageURL}/>
                 ) : (
                     <img className="expImg" src={placeholderImage}/>
@@ -198,7 +198,7 @@ function Option({item, GetQuantity, PlusPressed, SubPressed, InputChanged}){
         <div className="option">
             <div className="optionLeft">
                 <h5>{item.Name + " $" + item.Price}</h5>
-                {item.IsVegetarian && 
+                {item.IsVegetarian === 1 && 
                     <img className="vegLogo" src={vegLogo}/>}
             </div>
             <QuantityBar 

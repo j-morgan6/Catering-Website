@@ -9,8 +9,10 @@ import axios from "axios";
 
 export default function Menu(){
     const { categoryParam, itemParam} = useParams();
-    const [allItems, setAllItems] = useState(menuItems);
+    const [allItems, setAllItems] = useState([]);
     const [orderItems, setOrderItems] = useState([]);
+
+    console.log(allItems)
 
     //get cart from cookies on mount
     useEffect(() => {
@@ -29,7 +31,15 @@ export default function Menu(){
                 const accessToken = await useAccessToken()
 
                 const menuItems = (await axios.get(`${apiURI}/menu/items`)).data
-                console.log(menuItems)
+                //generate paths from item names
+                menuItems.forEach((item) => {
+                    let newPath = item.Name.toLowerCase();
+                    newPath = newPath.split(' ').join('-')
+                    newPath = newPath.replace(/[^a-z0-9-]/g, '');
+                    item.Path = newPath;
+                });
+
+                setAllItems(menuItems)
             } catch (err) {
                 console.log(err)
             }
@@ -129,7 +139,7 @@ export default function Menu(){
                 {
                 shownItems.map((item) =>
                     <MenuItemCard 
-                        key={item.Name}
+                        key={item.ID}
                         item={item}
                     />
                 )

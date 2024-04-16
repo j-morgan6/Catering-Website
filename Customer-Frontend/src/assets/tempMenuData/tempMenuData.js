@@ -20,9 +20,9 @@ const categories = [
         path: "a-la-carte"
     },
     {
-        title: "Desserts",
+        title: "Dessert",
         img: "src/assets/tempMenuData/minipastries.jpg",
-        path: "desserts"
+        path: "dessert"
     }
 ]
 

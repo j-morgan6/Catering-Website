@@ -1,8 +1,9 @@
-import {React, useState, useEffect} from "react";
+import {React, useState, useEffect, useContext} from "react";
 import Cookies from "js-cookie";
 import { CartItemSection, OrderForm } from "../components/CartComponents";
 
 export default function Cart(){
+    const {user} = useContext(UserContext)
     const [orderItems, setOrderItems] = useState([])
     const [justEmptiedCart, setJustEmptiedCart] = useState(false)
 
@@ -55,7 +56,7 @@ export default function Cart(){
                 ChangeQuantity={ChangeQuantity}
                 RemoveItem={RemoveItem}
             />
-            <OrderForm />
+            <OrderForm/>
         </div>
         <div className="extraSpace"></div>
     </div>

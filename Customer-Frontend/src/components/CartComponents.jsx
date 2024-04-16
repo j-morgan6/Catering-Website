@@ -17,7 +17,7 @@ function CartItemSection({orderItems, ChangeQuantity, RemoveItem}){
             {
                 orderItems.map((orderItem) => 
                     <CartItem 
-                        key={orderItem.Name}
+                        key={orderItem.ID}
                         orderItem={orderItem}
                         ChangeQuantity={ChangeQuantity}
                         RemoveItem={RemoveItem}
