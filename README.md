@@ -11,7 +11,7 @@ To clone the repository using SSH, use the command
 	git clone git@github.com:j-morgan6/Catering-Website.git
 
 1.2 Installing Dependencies
-Dependencies must be installed in all 3 sub-directories. In each directory, run npm install. This will install all required dependencies.
+Dependencies must be installed in all 3 sub-directories(Admin-Frontend, Customer-Frontend, and Catering-API). In each directory, run npm install. This will install all required dependencies.
 
 1.3. Running the Projects
-Each project (Customer front-end, Admin front-end, API) can be run separately. To run them, got to the project directory and run npm run dev
+Each project (Customer front-end, Admin front-end, API) can be run separately. To run them, go to the project directory and run npm run dev (must run 'npm run dev' in Catering-API to work properly)
