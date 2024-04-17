@@ -12,6 +12,7 @@ function Dashboard() {
     const [currentOrderForUpdate, setCurrentOrderForUpdate] = useState(null);
     const [newStatus, setNewStatus] = useState('');
     const [filters, setFilters] = useState({status: '',timestamp: '',price: ''});
+    
 
     const navigate = useNavigate();
 
@@ -72,38 +73,44 @@ function Dashboard() {
     const UpdateStatusPopup = () => (
         <div className="popup-overlay" onClick={() => setIsUpdateStatusVisible(false)}>
             <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                <input 
-                    type="text"
-                    value={newStatus}
-                    onChange={(e) => setNewStatus(e.target.value)}
-                    placeholder="Enter new status"
-                />
+                <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+                    <option value="">Select a Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Ready">Ready</option>
+                </select>
                 <button onClick={handleStatusUpdate}>Submit</button>
                 <button onClick={() => setIsUpdateStatusVisible(false)}>Close</button>
             </div>
         </div>
     );
-
+    
     const handleStatusUpdate = async () => {
         const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/orders/${currentOrderForUpdate.orderID}`;
         try {
             const accessToken = await useAccessToken();
             const response = await axios.patch(apiURI, {
-                status: newStatus,
+                status: newStatus
+            }, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`
                 }
             });
-
-            setOrders(orders.map(order => {
-                if (order.orderID === currentOrderForUpdate.orderID) {
-                    return { ...order, status: newStatus };
-                }
-                return order;
-            }));
-
-            setIsUpdateStatusVisible(false);
-            setNewStatus('');
+    
+            if (response.data) {
+                setOrders(orders.map(order => {
+                    if (order.orderID === currentOrderForUpdate.orderID) {
+                        return { ...order, status: newStatus };
+                    }
+                    return order;
+                }));
+    
+                setIsUpdateStatusVisible(false);
+                setNewStatus('');
+            }
         } catch (error) {
             console.error('Failed to update order status', error);
             // Handle error appropriately
