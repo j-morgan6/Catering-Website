@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import placeholderImage from "../assets/tempMenuData/placeholder.jpg"
 import 'material-icons/iconfont/material-icons.css'
 import '../pages/Cart.css'
@@ -94,49 +94,180 @@ function CartQuantityBar({orderItem, ChangeQuantity}){
     )
 }
 
-function OrderForm({user}){
+function OrderForm({user, orderItems}){
     const [formStatus, setFormStatus] = useState("notReady")
+    const [triedToSubmit, setTriedToSubmit] = useState(false)
     const[loggedIn, setLoggedIn] = useState("false")
     const [customerInfo, setCustomerInfo] = useState({
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         phone: "",
         email: "",
         company: ""
     })
     const [formData, setFormData] = useState({
-        store: "",
+        store: 0,
         type: "",
-        deliveryInfo: {
-            address: "",
-            aptNumber: "",
+        address: {
+            street: "",
             city: "",
-            postalCode: "",
-            province: "ON",
-            country: "Canada"
+            postal: "",
+            province: "",
         },
-        delivery_pickup_time: "",
-        instructions: ""
+        due_date: ""
     })
 
+    if(formStatus === "notReady" || formStatus === "ready") TryUpdateStatus()
+
+    useEffect(() => {
+        async function placeOrder(order) {
+            /**
+             * The structure of 'order' should be:
+            const order = {
+                store: (number) ID of the store to order from,
+                type: (string) can be either 'Delivery' or 'Pickup',
+                address: {
+                    street: (string) street number and name (e.g. "123 Summit Ave."),
+                    city: (string),
+                    province: (string),
+                    postal: (string)
+                },
+                due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
+                items: (array) [
+                    item: (number),
+                    quantity: (number)
+                ]
+            }
+
+            * If the "type" field is 'Pickup' do not provide an address
+            */
+            const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
+            try {
+                const accessToken = await useAccessToken()
+            
+                await axios.post(`${apiURI}/orders/order`, order, {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    withCredentials: true
+                })
+                
+                console.log("successfully submitted non-guest order\n")
+                // Put whatever you want to happen when the order is successfully placed here
+            } catch (err) {
+                // handle errors here
+                console.log("failed to submit non-guest order\n", err)
+                setFormStatus("notReady")
+            }
+        }
+
+        async function placeGuestOrder(order) {
+            /**
+             * The structure of 'order' should be:
+            const order = {
+                guest: {
+                    first_name: (string),
+                    last_name: (string),
+                    email: (string),
+                    phone: (string),
+                    company: (string)
+                }
+                store: (number) ID of the store to order from,
+                type: (string) can be either 'Delivery' or 'Pickup',
+                address: {
+                    street: (string) street number and name (e.g. "123 Summit Ave."),
+                    city: (string),
+                    province: (string),
+                    postal: (string)
+                },
+                due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
+                items: (array) [
+                    item: (number),
+                    quantity: (number)
+                ]
+            }
+
+            * If the "type" field is 'Pickup' do not provide an address
+            */
+            const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
+            try {
+                const accessToken = await useAccessToken()
+            
+                await axios.post(`${apiURI}/orders/guest-order`, order, {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    withCredentials: true
+                })
+                
+                console.log("successfully submitted guest order\n")
+                // Put whatever you want to happen when the order is successfully placed here
+            } catch (err) {
+                // handle errors here
+                console.log("failed to submit guest order\n", err)
+                setFormStatus("notReady")
+            }
+        }
+
+        if(formStatus === "submitted"){
+            let newOrder = {}
+
+            if(!user)
+                newOrder.guest = customerInfo
+
+            newOrder.store = formData.store
+            newOrder.type = formData.type
+
+            if(newOrder.type === "Delivery")
+                newOrder.address = formData.address
+
+            newOrder.due_date = formData.due_date
+
+            //recreate order items with just parts we need
+            let items = orderItems.map((item) => {
+                let orderItem = {}
+                orderItem.item = Number(item.ID)
+                orderItem.quantity = Number(item.quantity)
+                return orderItem
+            })
+            newOrder.items = items
+            console.log(newOrder)
+            if(!user)
+                placeGuestOrder(newOrder)
+            else
+                placeOrder(newOrder)
+        }
+
+    }, [formStatus])
+
+    function SubmitOrder(){
+        if(formStatus === "ready")
+            setFormStatus("submitted")
+    }
+
     function TryUpdateStatus(){
-        if(formStatus === "notReady"){ //see if can now update to ready to submit form
+        if(formStatus === "notReady" || formStatus === "ready"){ //see if can now update to ready to submit form
             let canSetReady = true
             if(!user){ //must have user fields filled out
-                if(!customerInfo.firstName || !customerInfo.lastName || !customerInfo.phone 
+                if(!customerInfo.first_name || !customerInfo.last_name || !customerInfo.phone 
                     || !customerInfo.email || !customerInfo.company)
                     canSetReady = false
             }
             
-            if(!formData.store || !formData.type || !formData.delivery_pickup_time)
+            if(!formData.store || !formData.type || !IsDateFullyFilledOut(formData.due_date))
                 canSetReady = false
 
             if(formData.type === "Delivery"){ //make sure delivery fields filled out
-                if(!formData.deliveryInfo.address || !formData.deliveryInfo.city || !formData.deliveryInfo.postalCode)
+                if(!formData.address.street || !formData.address.city || !formData.address.postal)
                     canSetReady = false
             }
+            if(orderItems.length <= 0) canSetReady = false
 
-            if(canSetReady) setFormStatus("ready")
+            if(canSetReady && formStatus === "notReady") 
+                setFormStatus("ready")
+            else if(!canSetReady && formStatus === "ready")
+                setFormStatus("notReady")
+
         }
     }
 
@@ -149,38 +280,36 @@ function OrderForm({user}){
             case "type":
                 newFormData.type = newVal
                 break
-            case "address":
-                newFormData.deliveryInfo.address = newVal
-                break
-            case "aptNumber":
-                newFormData.deliveryInfo.aptNumber = newVal
+            case "street":
+                newFormData.address.street = newVal
                 break
             case "city":
-                newFormData.deliveryInfo.city = newVal
+                newFormData.address.city = newVal
                 break
-            case "postalCode":
-                newFormData.deliveryInfo.postalCode = newVal
+            case "postal":
+                newFormData.address.postal = newVal
                 break
-            case "delivery_pickup_time":
-                newFormData.delivery_pickup_time = newVal
+            case "province":
+                newFormData.address.province = newVal
+                break
+            case "due_date":
+                newFormData.due_date = FormatDate(newVal)
                 break;
-            case "instructions":
-                newFormData.instructions = newVal
-                break
             default:
                 console.log("tried to update a non-existant property in onformchange")
         }
+        console.log("/n", newFormData.due_date)
         setFormData(newFormData)
     }
 
     function OnCustomerInfoChange(propetyName, newVal){
         let newCustomerInfo = JSON.parse(JSON.stringify(customerInfo))
         switch (propetyName){
-            case "firstName":
-                newCustomerInfo.firstName = newVal
+            case "first_name":
+                newCustomerInfo.first_name = newVal
                 break
-            case "lastName":
-                newCustomerInfo.lastName = newVal
+            case "last_name":
+                newCustomerInfo.last_name = newVal
                 break
             case "phone":
                 newCustomerInfo.phone = newVal
@@ -189,94 +318,33 @@ function OrderForm({user}){
                 newCustomerInfo.email = newVal
                 break
             case "company":
-                newCustomerInfo.phone = newVal
+                newCustomerInfo.company = newVal
                 break
             default:
                 console.log("tried to update a non-existant property in cust info change")
         }
+        setCustomerInfo(newCustomerInfo)
     }
 
-    async function placeOrder(order) {
-        /**
-         * The structure of 'order' should be:
-        const order = {
-            store: (number) ID of the store to order from,
-            type: (string) can be either 'Delivery' or 'Pickup',
-            address: {
-                street: (string) street number and name (e.g. "123 Summit Ave."),
-                city: (string),
-                province: (string),
-                postal: (string)
-            },
-            due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
-            items: (array) [
-                item: (number),
-                quantity: (number)
-            ]
-        }
+    function FormatDate(datetimeLocal) {
+        const date = new Date(datetimeLocal);
 
-         * If the "type" field is 'Pickup' do not provide an address
-         */
-        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
-        try {
-            const accessToken = await useAccessToken()
-        
-            await axios.post(`${apiURI}/orders/order`, order, {
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`
-                },
-                withCredentials: true
-            })
-            
-            // Put whatever you want to happen when the order is successfully placed here
-        } catch (err) {
-            // handle errors here
-        }
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero indexed
+        const day = ('0' + date.getDate()).slice(-2);
+
+        const hours = ('0' + date.getHours()).slice(-2);
+        const minutes = ('0' + date.getMinutes()).slice(-2);
+        const seconds = ('0' + date.getSeconds()).slice(-2);
+
+        const formattedDatetime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+        return formattedDatetime;
     }
 
-    async function placeGuestOrder(order) {
-        /**
-         * The structure of 'order' should be:
-        const order = {
-            guest: {
-                first_name: (string),
-                last_name: (string),
-                email: (string),
-                phone: (string),
-                company: (string)
-            }
-            store: (number) ID of the store to order from,
-            type: (string) can be either 'Delivery' or 'Pickup',
-            address: {
-                street: (string) street number and name (e.g. "123 Summit Ave."),
-                city: (string),
-                province: (string),
-                postal: (string)
-            },
-            due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
-            items: (array) [
-                item: (number),
-                quantity: (number)
-            ]
-        }
-
-         * If the "type" field is 'Pickup' do not provide an address
-         */
-        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
-        try {
-            const accessToken = await useAccessToken()
-        
-            await axios.post(`${apiURI}/orders/guest-order`, order, {
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`
-                },
-                withCredentials: true
-            })
-            
-            // Put whatever you want to happen when the order is successfully placed here
-        } catch (err) {
-            // handle errors here
-        }
+    function IsDateFullyFilledOut(dateString) {
+        const dateParts = dateString.split(/[- :]/);
+        return dateParts.length === 6 && !isNaN(Date.parse(dateString));
     }
 
     return(
@@ -286,13 +354,13 @@ function OrderForm({user}){
                 <div className="formSection customerInfo">
                     <h2 className="formSectionTitle">Customer Information</h2>
                     <label htmlFor="firstNameInput">First Name</label>
-                    <input name="firstName" type="text" id="firstNameInput"value={customerInfo.firstName}
-                        onChange={(e) => OnCustomerInfoChange("firstName", e.target.value)}/>
+                    <input name="first_name" type="text" id="firstNameInput"value={customerInfo.first_name}
+                        onChange={(e) => OnCustomerInfoChange("first_name", e.target.value)}/>
                     <label htmlFor="lastNameInput">Last Name</label>
-                    <input name="lastName" type="text" id="lastNameInput"value={customerInfo.lastName}
-                        onChange={(e) => OnCustomerInfoChange("lastName", e.target.value)}/>
+                    <input name="last_name" type="text" id="lastNameInput"value={customerInfo.last_name}
+                        onChange={(e) => OnCustomerInfoChange("last_name", e.target.value)}/>
                     <label htmlFor="phoneInput">Phone Number</label>
-                    <input name="phone" type="number" id="phoneInput" value={customerInfo.phone}
+                    <input name="phone" type="text" id="phoneInput" value={customerInfo.phone}
                         onChange={(e) => OnCustomerInfoChange("phone", e.target.value)}/>
                     <label htmlFor="emailInput">Email</label>
                     <input name="email" type="text" id="emailInput" value={customerInfo.email}
@@ -306,8 +374,14 @@ function OrderForm({user}){
             <div className="formSection orderInfo">
                 <h2 className="formSectionTitle">Order Information</h2>
                 <label htmlFor="storeDropdown">Select a store</label>
-                <select name="store" id="storeDropdown" value={formData.store} 
-                    onChange={(e) => OnFormChange("store",e.target.value)}>
+                <select name="store" id="storeDropdown" 
+                    value={(formData.store == 1) ? "879 Bay St., Toronto, ON M5S 3K6, Canada"
+                        : (formData.store == 2) ? "81 Front St E, Toronto, ON M5E 1B8, Canada"
+                        : ""} 
+                    onChange={(e) => {
+                        let storeID = (e.target.value === "879 Bay St., Toronto, ON M5S 3K6, Canada") ? 1 : 2
+                        OnFormChange("store", storeID)
+                    }}>
                     <option></option>
                     <option>879 Bay St., Toronto, ON M5S 3K6, Canada</option>
                     <option>81 Front St E, Toronto, ON M5E 1B8, Canada</option>
@@ -320,38 +394,32 @@ function OrderForm({user}){
                     <option value="Delivery">Delivery</option>
                 </select>
                 <label htmlFor="deliveryPickupTimeInput">Delivery/Pickup Time</label>
-                <input name="delivery_pickup_time" type="datetime-local" id="deliveryPickupTimeInput" 
-                        value={formData.deliveryPickupTime}
-                        onChange={(e) => OnFormChange("delivery_pickup_time", e.target.value)}/>
+                <input name="due_date" type="datetime-local" id="deliveryPickupTimeInput" 
+                        value={formData.due_date}
+                        onChange={(e) => OnFormChange("due_date", e.target.value)}/>
             </div>
             {formData.type === "Delivery" && 
                 <div className="formSection deliveryInfo">
                     <h3 className="formSectionTitle">Delivery Details</h3>
                     <label htmlFor="addrInput">Address</label>
-                    <input name="address" type="text" id="addrInput"value={formData.deliveryInfo.address}
-                        onChange={(e) => OnFormChange("address", e.target.value)}/>
-                    <label htmlFor="aptNumInput">Apartment/Suite</label>
-                    <input name="aptNumber" type="text" id="aptNumInput" value={formData.deliveryInfo.aptNumber}
-                        onChange={(e) => OnFormChange("aptNumber", e.target.value)}/>
+                    <input name="street" type="text" id="addrInput"value={formData.address.street}
+                        onChange={(e) => OnFormChange("street", e.target.value)}/>
                     <label htmlFor="cityInput">City</label>
-                    <input name="city" type="text" id="cityInput" value={formData.deliveryInfo.city}
+                    <input name="city" type="text" id="cityInput" value={formData.address.city}
                         onChange={(e) => OnFormChange("city", e.target.value)}/>
                     <label htmlFor="postalCodeInput">Postal Code</label>
-                    <input name="postalCode" type="text" id="postalCodeInput" value={formData.deliveryInfo.postalCode}
-                        onChange={(e) => OnFormChange("postalCode", e.target.value)}/>
+                    <input name="postal" type="text" id="postalCodeInput" value={formData.address.postal}
+                        onChange={(e) => OnFormChange("postal", e.target.value)}/>
+                    <label htmlFor="provinceInput">Province</label>
+                    <input name="province" type="text" id="provinceInput" value={formData.address.province}
+                        onChange={(e) => OnFormChange("province", e.target.value)}/>
                 </div>
             }
-            <div className="formSection orderInfo">
-                <label htmlFor="instructionsInput">Special Instructions</label>
-                <textarea 
-                    value={formData.instructions}
-                    name="instructions"    
-                    id="instructionsInput" 
-                    cols="30"  
-                    rows="4"
-                    onChange={(e) => OnFormChange("instructions", e.target.value)}
-                ></textarea>
-            </div>
+            <button 
+                type="submit" 
+                onClick={() => SubmitOrder()}
+                disabled={formStatus !== "ready"}
+            >Place Order</button>
         </form>
     </div>
     );
