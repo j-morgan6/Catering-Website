@@ -19,4 +19,4 @@ Each project (Customer front-end, Admin front-end, API) can be run separately. T
 
 Important Note: 
 In order to login and test. If you want to login as customer must sign up first. 
-To login to admin use: Username: Password:
+To login to admin use: Username:admin Password: Password
