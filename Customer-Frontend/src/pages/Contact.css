@@ -1,0 +1,37 @@
+#Contact {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.contact-info {
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+    width: calc(50% - 40px);
+    box-sizing: border-box;
+}
+
+.contact-info img {
+    width: calc(100% - 40px);
+    height: auto;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+.contact-info .info h2 {
+    margin-bottom: 5px;
+    color: black;
+}
+
+.contact-info .info p {
+    margin: 5px 0;
+    color: black;
+}

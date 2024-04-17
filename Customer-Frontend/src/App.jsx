@@ -6,6 +6,7 @@ import { useAccessToken, clearTokens } from './hooks/useAccessToken'
 
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
+import Contact from './pages/Contact'
 import Auth from './pages/Auth'
 import Account from './pages/Account'
 
@@ -49,6 +50,7 @@ function App() {
                     <Navbar />
                     <Routes>
                         <Route path='/' element={<Home />} />
+                        <Route path='/contact' element={<Contact />} />
                         <Route path='/auth' element={<Auth />} />
                         <Route path='/account' element={<Account />} />
                     </Routes>
