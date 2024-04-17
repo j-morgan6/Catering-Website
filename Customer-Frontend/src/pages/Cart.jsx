@@ -7,6 +7,7 @@ export default function Cart(){
     const {user} = useContext(UserContext)
     const [orderItems, setOrderItems] = useState([])
     const [justEmptiedCart, setJustEmptiedCart] = useState(false)
+    const [displaySuccess, setDisplaySuccess] = useState(false)
 
     console.log(orderItems)
 
@@ -49,6 +50,12 @@ export default function Cart(){
         setOrderItems(newOrderItems)
     }
 
+    function HandleOrderSuccess(){
+        setDisplaySuccess(true) //set to display the success text
+        setJustEmptiedCart(true)
+        setOrderItems([]) //clear the cart of items
+    }
+
     return(
     <div className="cartPage">
         <div className="cart">
@@ -60,9 +67,14 @@ export default function Cart(){
             <OrderForm 
                 user={user}
                 orderItems={orderItems}
+                HandleOrderSuccess={HandleOrderSuccess}
             />
         </div>
-        <div className="extraSpace"></div>
+        <div className="extraSpace">
+            {displaySuccess &&
+                <h1 className="successText">Your order has been successfully placed, thank you!</h1>
+            }
+        </div>
     </div>
     );
 }
