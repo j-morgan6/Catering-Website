@@ -69,18 +69,39 @@ h2{
     margin: 0;
 }
 
+.outerExp{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .expanded{
+    width: 50%;
+    height: 100%;
+    min-width: 550px;
+    min-height: 300px;
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
     border: 2px solid black;
     border-radius: 20px;
     padding: 1%;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
+.added{
+    text-align: center;
+    margin-top: 3%;
+}
+
 .expImg{
-    width: 40%;
+    width: 100%;
     height: auto;
+    max-width: 40%;
+    max-height: 80%;
+    margin-top: 20px;
 }
 
 .infoSec{
@@ -88,19 +109,25 @@ h2{
     flex-direction: column;
     padding: 2%;
     width: 70%;
+    height: 100%;
     margin-left: 20px;
 }
 
 .addToCart{
-    width: 20%;
     margin-left: 5%;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.optionContainer{
+    margin-bottom: 20px;
 }
 
 .infoBottomBar{
     display: flex;
+    justify-self: flex-end;
     justify-content: flex-end;
     margin-top: auto;
-    margin-bottom: 5%;
     width: 100%;
 }
 
@@ -123,6 +150,7 @@ h3{
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    margin-top: 20px;
 }
 
 .optionLeft{
@@ -139,7 +167,6 @@ h3{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-right: 10%;
     width: 120px;
 }
 
