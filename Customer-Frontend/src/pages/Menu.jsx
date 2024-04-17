@@ -51,7 +51,7 @@ export default function Menu(){
     useEffect(() => {
         if(orderItems.length > 0){
             let cartItemsStr = JSON.stringify(orderItems)
-            Cookies.set('cart', cartItemsStr, {sameSite: 'None'})
+            Cookies.set('cart', cartItemsStr, {sameSite: 'strict'})
             console.log(`SET cart cookies to:\n ${cartItemsStr}`)
         }
     }, [orderItems])
