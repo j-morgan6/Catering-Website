@@ -1,0 +1,147 @@
+#auth-page {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.auth-container {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 64px 16px 16px;
+}
+
+#auth-page div:nth-child(1) img {
+    max-width: 75%;
+    max-height: 70%;
+}
+
+#auth-page div:nth-child(1) h1 {
+    margin: 0;
+    font-size: 3rem;
+    font-size: 700;
+}
+
+#auth-page div:nth-child(2) {
+    background-color: white;
+    padding: 64px 32px 16px;
+}
+
+#auth-page div:nth-child(2) h2 {
+    margin-bottom: 24px;
+    font-size: 1.25rem;
+    font-size: 700;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+}
+
+.input-text {
+    width: 100%;
+    height: 64px;
+    border: 2px solid var(--brand-tertiary);
+    border-radius: 35px;
+    padding: 0 32px;
+    font-size: 1rem;
+    color: black !important;
+    transition: all .3s ease;
+    outline: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.input-text:hover {
+    border: 2px solid var(--background);
+}
+
+.input-text:focus {
+    border: 2px solid var(--background);
+}
+
+input[type=checkbox] {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    appearance: none;
+    border: 1px solid black;
+    border-radius: .5rem;
+    transition: all .1s ease;
+}
+
+input[type=checkbox]:checked {
+    background-color: var(--brand-tertiary);
+}
+
+.auth-form span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    margin-left: 24px;
+}
+
+.auth-form span label {
+    font-size: 1rem;
+}
+
+.auth-form p {
+    font-size: 1rem;
+}
+
+.auth-form p button {
+    color: var(--brand-tertiary);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.auth-form p button:hover {
+    color: var(--background);
+}
+
+input[type=submit] {
+    width: 50%;
+    height: 64px;
+    border-width: 0;
+    border-radius: 35px;
+    background-color: black;
+    color: white;
+    font-size: 1rem;
+    transition: all .3s ease;
+}
+
+input[type=submit]:hover {
+    background-color: rgba(0, 0, 0, .9);
+    cursor: pointer;
+}
+
+.dual-input {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.hidden-form {
+    display: none;
+}
+
+#login-error {
+    font-size: 1rem;
+    color: var(--brand-primary);
+    margin: 0
+}

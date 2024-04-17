@@ -1,0 +1,182 @@
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.centered-table {
+    border-collapse: collapse;
+    width: 90%; 
+    margin-top: 20px;
+    border: 3px solid black;
+}
+
+/* Set the background color for every other row */
+.centered-table tbody tr:nth-child(odd) {
+    background-color: transparent;
+}
+
+/* Set a different background color for even rows */
+.centered-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Reset the background color for the last column in all rows */
+.centered-table tbody tr td:last-child {
+    background-color: transparent !important; 
+}
+
+/* Borders and text alignment for th and td */
+.centered-table th, .centered-table td {
+    border: 3px solid #000000;
+    text-align: center;
+    padding: 8px;
+}
+
+/* Background color for the header cells */
+.centered-table th {
+    background-color: #f2f2f2;
+}
+
+
+
+/* General styling for the popup overlay */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensures the popup is on top of other content */
+}
+
+/* Styling for the popup content box */
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 300px; /* Fixed width, adjust as necessary */
+    text-align: center;
+}
+
+/* Styling for the dropdown within the popup */
+.popup-content select {
+    width: 100%; /* Full width of the popup */
+    padding: 8px;
+    margin-bottom: 20px; /* Space between the dropdown and the button */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for buttons within the popup */
+.popup-content button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px; /* Space between buttons */
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.popup-content button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Styling for the close button specifically, if needed */
+.popup-content button.close-btn {
+    background-color: #dc3545; /* Bootstrap danger color */
+}
+
+.popup-content button.close-btn:hover {
+    background-color: #c82333; /* Darker shade on hover */
+}
+
+.popup-content table {
+    border-collapse: collapse;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.popup-content th,
+.popup-content td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+.quantity-header,
+.quantity-cell {
+    text-align: right;
+}
+
+.update-status-btn {
+    font-size: 14px;
+    background-color: #4CAF50; 
+    color: rgb(0, 0, 0);
+    border-radius: 4px; 
+    cursor: pointer; 
+    outline: none; 
+    transition: background-color 0.3s; 
+}
+
+.update-status-btn:hover {
+    background-color: darkgreen; 
+}
+
+.update-status-btn:focus {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
+
+.view-order-btn {
+    font-size: 14px;
+    background-color: #4670ca; 
+    color: rgb(0, 0, 0);
+    border-radius: 4px; 
+    cursor: pointer; 
+    outline: none; 
+    transition: background-color 0.3s; 
+}
+
+.view-order-btn:hover {
+    background-color: rgb(25, 40, 175);
+}
+
+.view-order-btn:focus {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
+
+.delete-button {
+    font-size: 14px;
+    background-color: #dd3d3d; 
+    color: rgb(0, 0, 0);
+    border-radius: 4px; 
+    cursor: pointer; 
+    outline: none; 
+    transition: background-color 0.3s; 
+}
+
+.delete-button:hover {
+    background-color: darkred;
+}
+
+.delete-button:focus {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
+
+.update-status-btn, .delete-button, .view-order-btn {
+    padding: 10px 7px;
+    margin: 0 5px 0 0; 
+    white-space: nowrap; 
+}

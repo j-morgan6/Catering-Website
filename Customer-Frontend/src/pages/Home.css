@@ -1,0 +1,41 @@
+#Home {
+    display: flex;
+    height: 100vh;
+}
+
+.left-half {
+    width: 50%;
+    background-color: #EDDDC2;
+    padding: 64px 32px;
+}
+
+.home-content {
+    max-width: 80%;
+    margin: 0 auto;
+    color: black;
+    text-align: center;
+}
+
+.home-content {
+    text-align: center;
+    margin-top: 72px;
+}
+
+.home-content h1 {
+    font-size: 96px;
+    font-weight: bold;
+    max-width: 500px;
+    line-height: 1;
+}
+
+.home-content p {
+    font-size: 28px;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.4;
+}
+
+.gif-image {
+    width: 100%;
+    height: auto;
+}
