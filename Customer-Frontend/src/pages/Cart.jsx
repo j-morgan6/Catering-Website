@@ -57,7 +57,10 @@ export default function Cart(){
                 ChangeQuantity={ChangeQuantity}
                 RemoveItem={RemoveItem}
             />
-            <OrderForm user={user}/>
+            <OrderForm 
+                user={user}
+                orderItems={orderItems}
+            />
         </div>
         <div className="extraSpace"></div>
     </div>
