@@ -15,3 +15,8 @@ Dependencies must be installed in all 3 sub-directories(Admin-Frontend, Customer
 
 1.3. Running the Projects
 Each project (Customer front-end, Admin front-end, API) can be run separately. To run them, go to the project directory and run npm run dev (must run 'npm run dev' in Catering-API to work properly)
+
+
+Important Note: 
+In order to login and test. If you want to login as customer must sign up first. 
+To login to admin use: Username: Password:
