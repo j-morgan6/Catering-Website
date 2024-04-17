@@ -167,7 +167,7 @@ function Dashboard() {
                         <td>{order.status}</td>
                         <td>{order.timestamp}</td>
                         <td>{order.orderType}</td>
-                        <td>{order.deliveryPickupTime}</td>
+                        <td>{order.dueDate}</td>
                         <td>{order.total !== null ? order.total : 'N/A'}</td>
                         <td><button className="update-status-btn" onClick={(e) => handleUpdateStatusClick(order,e)}>Update Status</button>
                             <button onClick={() => handleViewOrder(order.items)} className="view-order-btn">View Order</button>
