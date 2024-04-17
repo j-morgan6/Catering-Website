@@ -25,7 +25,7 @@ export default function Cart(){
     useEffect(() => {
         if(orderItems.length > 0 || justEmptiedCart){
             let cartItemsStr = JSON.stringify(orderItems)
-            Cookies.set('cart', cartItemsStr, {sameSite: 'None'})
+            Cookies.set('cart', cartItemsStr, {sameSite: 'strict'})
             console.log(`SET cart cookies to:\n ${cartItemsStr}`)
         }
     }, [orderItems])
