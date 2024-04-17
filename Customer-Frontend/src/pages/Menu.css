@@ -1,0 +1,214 @@
+.menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-evenly;
+    align-items:center;
+    width:250px;
+    height: auto;
+    min-height: 275px;
+    max-height: 350px;
+    border-radius: 5%;
+    padding: 1%;
+    margin: 1%;
+    border: 2px solid black;
+<<<<<<< HEAD
+    text-decoration: none;
+    color: black;
+}
+
+.cardLink{
+    width: 100%;
+    height: 100%;
+    border: 1px solid orange;
+}
+
+.card:hover{
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+=======
+>>>>>>> 98bf33d (display menu items and some styling)
+}
+
+.menuImg{
+    border-radius: 10px;
+    width: 100%;
+}
+
+.cardTitle{
+    text-align: center;
+    margin-top: 3%;
+}
+
+.cardBar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    width: 100%;
+    margin-top: 3%;
+}
+
+.vegLogo{
+    height: 20px;
+    width: 20px;
+    align-self:flex-end;
+}
+
+h2{
+    padding: 0;
+    margin: 0;
+}
+
+.outerExp{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.outerExp{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.expanded{
+    width: 50%;
+    height: 100%;
+    min-width: 550px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 1%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.added{
+    text-align: center;
+    margin-top: 3%;
+}
+
+.expImg{
+    width: 100%;
+    height: auto;
+    max-width: 40%;
+    max-height: 80%;
+    margin-top: 20px;
+}
+
+.infoSec{
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    width: 70%;
+    height: 100%;
+    margin-left: 20px;
+}
+
+.addToCart{
+    margin-left: 5%;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.optionContainer{
+    margin-bottom: 20px;
+}
+
+.infoBottomBar{
+    display: flex;
+    justify-self: flex-end;
+    justify-content: flex-end;
+    margin-top: auto;
+    width: 100%;
+}
+
+h3{
+    padding: 0;
+    margin: 0;
+}
+
+.expTitle{
+    align-self: center;
+}
+
+.itemDesc{
+    text-align: center;
+}
+
+.option{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.optionLeft{
+    display: flex;
+    flex-direction: row;
+}
+
+.option .vegLogo{
+    align-self: center;
+    margin-left: 10px;
+}
+
+.quantityBar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 120px;
+}
+
+.quantContainer{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5%;
+    width: 100%;
+}
+
+.quantInput{
+    width: 55px;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.quantButton{
+    width: 25px;
+}
+
+.quantButton:hover,
+.addToCart:hover{
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+

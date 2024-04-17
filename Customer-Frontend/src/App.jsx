@@ -11,6 +11,8 @@ import Contact from './pages/Contact'
 import Auth from './pages/Auth'
 import Account from './pages/Account'
 import NotFound from './pages/NotFound'
+import Menu from './pages/Menu'
+import Cart from './pages/Cart'
 
 function App() {
 
@@ -56,6 +58,10 @@ function App() {
                         <Route path='/auth' element={<Auth />} />
                         <Route path='/account' element={<Account />} />
                         <Route path='*' element={<NotFound />} />
+                        <Route path='/menu' element={<Menu />} />
+                        <Route path='/menu/:categoryParam' element={<Menu />} />
+                        <Route path='/menu/:categoryParam/:itemParam' element={<Menu />} />
+                        <Route path='/cart' element={<Cart />} />
                     </Routes>
                     <Footer />
                 </Router>

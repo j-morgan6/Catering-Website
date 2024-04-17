@@ -1,0 +1,179 @@
+.cartPage{
+    display: flex;
+    flex-direction: column;
+}
+
+.cart{
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border: 1px solid pink;
+}
+
+.informationSection{
+    width:500px;
+    border: 1px solid green;
+}
+
+select option:first-child{
+    display: none;
+}
+
+.cartItemSection{
+    min-width: 500px;
+    min-height: 200px;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    border: 5px solid white;
+    border-radius: 30px;
+    margin: 30px;
+    padding: 10px;
+    background-color: black;
+}
+
+.cartItem{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: 15px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    background-color: #EDDDC2;
+}
+
+.noItemsText{
+    text-align: center;
+    color: red;
+}
+
+.itemLeftSide{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    width: 50%;
+    border: 1px solid gray;
+}
+
+.leftSidePart{
+    margin-left: 3%;
+}
+
+.x{
+    color: red;
+}
+
+.x:hover{
+    cursor: pointer;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.itemRightSide{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.rightSidePart{
+    margin-right: 15px;
+}
+
+.cartTitle{
+    text-align: center;
+    color: white;
+}
+
+.subTotal{
+    text-align: right;
+    margin-right: 20px;
+    color: white;
+}
+
+
+.cartItemImg{
+    max-height: 55px;
+    min-height: auto;
+    max-width: 55px;
+    min-width: auto;
+}
+
+
+.informationSection{
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
+    width: 30%;
+    border: 5px solid white;
+    background-color: black;
+    margin: 30px 30px 30px 0px;
+    border-radius: 30px;
+    padding: 10px;
+}
+
+.orderForm{
+    display:flex;
+    flex-direction: column;
+}
+
+.formSection{
+    display: flex;
+    flex-direction: column;
+}
+
+.formSectionTitle{
+    text-align: center;
+    color:white;
+}
+
+.formSection input,
+.formSection select,
+.formSection textarea{
+    margin-bottom: 10px;
+    background-color:#EDDDC2;
+    border-radius: 5px;
+}
+
+.formSection input,
+.formSection select{
+    height: 25px;
+}
+
+.formSection label{
+    color: white;
+}
+
+select option:first-child{
+    display: none;
+}
+
+.bottomFormBar{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.submitFailText{
+    color: red;
+    margin-right: 15px;
+}
+
+.successText{
+    text-align: center;
+    color: green;
+}
+
+.placeOrder{
+    width: 100px;
+    height: 35px;
+    margin-right: 15px;
+}
+
+.extraSpace{
+    height: 500px;
+    width: 100%;
+}
