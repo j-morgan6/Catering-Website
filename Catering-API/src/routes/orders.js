@@ -63,8 +63,18 @@ router.get('/', (req, res) => {
     // order by clause
     const orderBy = `ORDER BY \`Order\`.Timestamp ${req.query.order && req.query.order == 'asc' ? 'ASC' : 'DESC'}`
 
-    const orderInfoStmt = Database.prepare(`SELECT
-    \`Order\`.ID, \`Order\`.Timestamp, \`Order\`.Status, \`Order\`.OrderType, \`Order\`.DeliveryPickupTime,
+    const customerOrderStmt = Database.prepare(`SELECT
+    \`Order\`.*,
+    (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
+    Guest.FirstName, Guest.LastName, Guest.Company,
+    Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
+    FROM (\`Order\` JOIN Store ON \`Order\`.StoreID = Store.ID) JOIN Guest ON \`Order\`.GuestID = Guest.ID
+    ${filterStr ? `WHERE ${filterStr} ` : ''}
+    ${orderBy}
+    `)
+
+    const guestOrderStmt = Database.prepare(`SELECT
+    \`Order\`.*,
     (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
     Customer.FirstName, Customer.LastName, Customer.Company,
     Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
@@ -82,15 +92,14 @@ router.get('/', (req, res) => {
     `)
 
     try {
-        const orderResponse = orderInfoStmt.all(req.body)
-
-        if (!orderResponse) {
-            res.status(StatusCodes.NO_CONTENT).send()
-            return
-        }
+        // get orders by registered customers
+        const customerOrderResponse = customerOrderStmt.all(req.body)
+        // get orders by guest customers
+        const guestOrderResponse = guestOrderStmt.all(req.body)
 
         const orders = []
-        for (const orderInfo of orderResponse) {
+
+        for (const orderInfo of customerOrderResponse) {
             const itemsResponse = orderItemsStmt.all({ orderID: orderInfo.ID })
 
             const order = {
@@ -98,7 +107,35 @@ router.get('/', (req, res) => {
                 timestamp: orderInfo.Timestamp,
                 status: orderInfo.Status,
                 orderType: orderInfo.OrderType,
-                deliveryPickupTime: orderInfo.DeliveryPickupTime,
+                dueDate: orderInfo.DueDate,
+                total: orderInfo.Total,
+                store: {
+                    name: orderInfo.StoreName,
+                    street: `${orderInfo.StreetNumber} ${orderInfo.StreetName}`,
+                    city: orderInfo.City,
+                    province: orderInfo.Province,
+                    postal: orderInfo.PostalCode
+                },
+                customer: {
+                    firstName: orderInfo.FirstName,
+                    lastName: orderInfo.LastName,
+                    company: orderInfo.Company
+                },
+                items: itemsResponse
+            }
+
+            orders.push(order)
+        }
+
+        for (const orderInfo of guestOrderResponse) {
+            const itemsResponse = orderItemsStmt.all({ orderID: orderInfo.ID })
+
+            const order = {
+                orderID: orderInfo.ID,
+                timestamp: orderInfo.Timestamp,
+                status: orderInfo.Status,
+                orderType: orderInfo.OrderType,
+                dueDate: orderInfo.DueDate,
                 total: orderInfo.Total,
                 store: {
                     name: orderInfo.StoreName,
@@ -120,6 +157,56 @@ router.get('/', (req, res) => {
 
         res.send(orders)
     } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            error: {
+                code: StatusCodes.INTERNAL_SERVER_ERROR,
+                reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                message: err.message ? err.message : "The server encountered an error."
+            }
+        })
+    }
+})
+
+router.put('/:order/status', (req, res) => {
+    // Get authorization token
+    const token = extractAuthToken(req.headers.authorization)
+
+    const payload = AdminTokens.validate(token)
+    if (!payload) {
+        res.status(StatusCodes.UNAUTHORIZED).send({
+            error: {
+                code: StatusCodes.UNAUTHORIZED,
+                reason: ReasonPhrases.UNAUTHORIZED,
+                message: "Invaliad authorization token."
+            }
+        })
+        return
+    }
+
+    const schema = joi.object({
+        status: joi.string().required()
+    })
+
+    const validationResult = schema.validate(req.body)
+    if (validationResult.error) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            error: {
+                code: StatusCodes.BAD_REQUEST,
+                reason: ReasonPhrases.BAD_REQUEST,
+                message: validationResult.error.message
+            }
+        })
+        return
+    }
+
+    req.body.order = req.params.order
+
+    try {
+        const stmt = Database.prepare('UPDATE `Order` SET Status = $status WHERE ID = $order')
+        stmt.run(req.body)
+        res.send({ success: true })
+    } catch (err) {
+        console.log(err)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             error: {
                 code: StatusCodes.INTERNAL_SERVER_ERROR,
@@ -298,6 +385,42 @@ router.post('/guest-order', (req, res) => {
 
     try {
         transaction()
+    } catch (err) {
+        console.log(err)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            error: {
+                code: StatusCodes.INTERNAL_SERVER_ERROR,
+                reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                message: err.message ? err.message : "The server encountered an error."
+            }
+        })
+    }
+})
+
+router.delete('/:order', (req, res) => {
+    // Get authorization token
+    const token = extractAuthToken(req.headers.authorization)
+
+    const payload = AdminTokens.validate(token)
+    if (!payload) {
+        res.status(StatusCodes.UNAUTHORIZED).send({
+            error: {
+                code: StatusCodes.UNAUTHORIZED,
+                reason: ReasonPhrases.UNAUTHORIZED,
+                message: "Invaliad authorization token."
+            }
+        })
+        return
+    }
+
+    const stmt = Database.prepare('DELETE FROM `Order` WHERE ID = $order')
+
+    try {
+        stmt.run({ order: req.params.order })
+        
+        res.send({
+            success: true
+        })
     } catch (err) {
         console.log(err)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({

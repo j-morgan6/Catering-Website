@@ -89,16 +89,17 @@ function Dashboard() {
     );
     
     const handleStatusUpdate = async () => {
-        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/orders/${currentOrderForUpdate.orderID}`;
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/orders/${currentOrderForUpdate.orderID}/status`;
         try {
             const accessToken = await useAccessToken();
-            const response = await axios.patch(apiURI, {
+            const response = await axios.put(apiURI, {
                 status: newStatus
             }, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`
                 }
             });
+            console.log(response)
     
             if (response.data) {
                 setOrders(orders.map(order => {
@@ -117,8 +118,25 @@ function Dashboard() {
         }
     };
 
-    const handleDelete = (orderId) => {
+    const handleDelete = async (orderId) => {
         console.log("Deleting order with ID:", orderId);
+
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/orders/${orderId}`;
+        try {
+            const accessToken = await useAccessToken();
+            await axios.delete(apiURI, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            });
+
+            const newOrders = orders.filter(order => order.orderID !== orderId)
+            setOrders(newOrders)
+        } catch (error) {
+            console.error('Failed to update order status', error);
+            console.log(error)
+            // Handle error appropriately
+        }
     };
 
     const handleViewOrder = (orderItems) => {
