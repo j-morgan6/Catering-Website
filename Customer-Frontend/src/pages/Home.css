@@ -1,6 +1,7 @@
 #Home {
     display: flex;
     height: 100vh;
+    padding-top: 32px;
 }
 
 .left-half {
@@ -10,22 +11,34 @@
 }
 
 .home-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 80%;
+    text-align: center;
+}
+
+/* .home-content {
     max-width: 80%;
     margin: 0 auto;
     color: black;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
 }
 
 .home-content {
     text-align: center;
     margin-top: 72px;
-}
+} */
 
 .home-content h1 {
     font-size: 96px;
     font-weight: bold;
     max-width: 500px;
     line-height: 1;
+    margin-bottom: 1rem;
 }
 
 .home-content p {
@@ -37,5 +50,4 @@
 
 .gif-image {
     width: 100%;
-    height: auto;
 }
