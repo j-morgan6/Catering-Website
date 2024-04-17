@@ -218,6 +218,8 @@ router.put('/:order/status', (req, res) => {
 })
 
 router.post('/order', (req, res) => {
+
+    console.log(`New Order for Registered User\nOrder Data:\n${req.body}`)
     // Get authorization token
     const token = extractAuthToken(req.headers.authorization)
 
@@ -264,11 +266,15 @@ router.post('/order', (req, res) => {
     req.body.customer = payload.id
 
     const transaction = Database.transaction(() => {
-        const orderStmt = Database.prepare('INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate) VALUES ($customer, $store, $type, $due_date)')
+        let orderQuery
+        if (req.body.type == 'Delivery') orderQuery = 'INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate, DeliveryStreet, DeliveryCity, DeliveryProvince, DeliveryPostalCode) VALUES ($customer, $store, $type, $due_date, $street, $city, $province, $postal)'
+        else orderQuery = 'INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate) VALUES ($customer, $store, $type, $due_date)'
+        const orderStmt = Database.prepare(orderQuery)
+
         const itemStmt = Database.prepare('INSERT INTO OrderItem (OrderID, MenuItemID, Quantity) VALUES ($order, $item, $quantity)')
         
         const orderDetails = {
-            customer: req.body.customer,
+            customer: payload.id,
             store: req.body.store,
             type: req.body.type,
             due_date: req.body.due_date,
@@ -280,7 +286,7 @@ router.post('/order', (req, res) => {
             orderDetails.postal = req.body.address.postal
         }
 
-        const orderID = orderStmt.run(req.body).lastInsertRowid
+        const orderID = orderStmt.run(orderDetails).lastInsertRowid
         console.log(orderID)
 
         for (const item of req.body.items) {

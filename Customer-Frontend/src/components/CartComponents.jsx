@@ -121,6 +121,7 @@ function OrderForm({user, orderItems, HandleOrderSuccess}){
 
     useEffect(() => {
         async function placeOrder(order) {
+            console.log(order)
             const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
             try {
                 const accessToken = await useAccessToken()
@@ -167,6 +168,7 @@ function OrderForm({user, orderItems, HandleOrderSuccess}){
             const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
             try {
                 const accessToken = await useAccessToken()
+                console.log(order)
             
                 await axios.post(`${apiURI}/orders/guest-order`, order, {
                     headers: {
@@ -227,7 +229,6 @@ function OrderForm({user, orderItems, HandleOrderSuccess}){
                 return orderItem
             })
             newOrder.items = items
-            console.log(newOrder)
             if(!user)
                 placeGuestOrder(newOrder)
             else
