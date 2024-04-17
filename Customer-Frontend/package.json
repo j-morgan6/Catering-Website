@@ -12,7 +12,6 @@
   "dependencies": {
     "axios": "^1.6.8",
     "js-cookie": "^3.0.5",
-    "material-icons": "^1.13.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3"

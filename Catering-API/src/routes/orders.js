@@ -1,7 +1,6 @@
 const express = require('express')
 const joi = require('joi')
 const { AdminTokens, CustomerTokens } = require('../functions/tokens')
-const { AdminTokens, CustomerTokens } = require('../functions/tokens')
 const { extractAuthToken } = require('../functions/authorization')
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
 const { Database } = require('../database')
@@ -219,25 +218,6 @@ router.put('/:order/status', (req, res) => {
 })
 
 router.post('/order', (req, res) => {
-
-    console.log(`New Order for Registered User\nOrder Data:\n${req.body}`)
-    // Get authorization token
-    const token = extractAuthToken(req.headers.authorization)
-
-    const payload = CustomerTokens.validate(token)
-    if (!payload) {
-        res.status(StatusCodes.UNAUTHORIZED).send({
-            error: {
-                code: StatusCodes.UNAUTHORIZED,
-                reason: ReasonPhrases.UNAUTHORIZED,
-                message: "Invaliad authorization token."
-            }
-        })
-        return
-    }
-
-
-    console.log(`New Order for Registered User\nOrder Data:\n${req.body}`)
     // Get authorization token
     const token = extractAuthToken(req.headers.authorization)
 
@@ -256,13 +236,6 @@ router.post('/order', (req, res) => {
     const schema = joi.object({
         store: joi.number().required(),
         type: joi.string().valid('Delivery', 'Pickup').required(),
-        address: joi.object({
-            street: joi.string().required(),
-            city: joi.string().required(),
-            province: joi.string().required(),
-            postal: joi.string().required()
-        }).optional(),
-        due_date: joi.date(),
         address: joi.object({
             street: joi.string().required(),
             city: joi.string().required(),
@@ -290,23 +263,12 @@ router.post('/order', (req, res) => {
 
     req.body.customer = payload.id
 
-    req.body.customer = payload.id
-
     const transaction = Database.transaction(() => {
-        let orderQuery
-        if (req.body.type == 'Delivery') orderQuery = 'INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate, DeliveryStreet, DeliveryCity, DeliveryProvince, DeliveryPostalCode) VALUES ($customer, $store, $type, $due_date, $street, $city, $province, $postal)'
-        else orderQuery = 'INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate) VALUES ($customer, $store, $type, $due_date)'
-        const orderStmt = Database.prepare(orderQuery)
-
-        let orderQuery
-        if (req.body.type == 'Delivery') orderQuery = 'INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate, DeliveryStreet, DeliveryCity, DeliveryProvince, DeliveryPostalCode) VALUES ($customer, $store, $type, $due_date, $street, $city, $province, $postal)'
-        else orderQuery = 'INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate) VALUES ($customer, $store, $type, $due_date)'
-        const orderStmt = Database.prepare(orderQuery)
-
+        const orderStmt = Database.prepare('INSERT INTO `Order` (CustomerID, StoreID, OrderType, DueDate) VALUES ($customer, $store, $type, $due_date)')
         const itemStmt = Database.prepare('INSERT INTO OrderItem (OrderID, MenuItemID, Quantity) VALUES ($order, $item, $quantity)')
         
         const orderDetails = {
-            customer: payload.id,
+            customer: req.body.customer,
             store: req.body.store,
             type: req.body.type,
             due_date: req.body.due_date,
@@ -318,22 +280,7 @@ router.post('/order', (req, res) => {
             orderDetails.postal = req.body.address.postal
         }
 
-        const orderID = orderStmt.run(orderDetails).lastInsertRowid
-        
-        const orderDetails = {
-            customer: payload.id,
-            store: req.body.store,
-            type: req.body.type,
-            due_date: req.body.due_date,
-        }
-        if (req.body.type == 'Delivery') {
-            orderDetails.street = req.body.address.street
-            orderDetails.city = req.body.address.city
-            orderDetails.province = req.body.address.province
-            orderDetails.postal = req.body.address.postal
-        }
-
-        const orderID = orderStmt.run(orderDetails).lastInsertRowid
+        const orderID = orderStmt.run(req.body).lastInsertRowid
         console.log(orderID)
 
         for (const item of req.body.items) {

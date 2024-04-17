@@ -36,7 +36,7 @@ router.get('/items', (req, res) => {
     for (const filter in req.body) if (filterMap[filter]) filters.push(filterMap[filter])
     const filterStr = filters.join(' AND ')
 
-    stmt = Database.prepare(`SELECT * FROM MenuItem ${filterStr ? `WHERE ${filterStr}` : ''}`)
+    stmt = Database.prepare(`SELECT * FROM MenuItem WHERE Category IN ('Breakfast', 'Lunch', 'À la Carte', 'Beverages', 'Dessert') ${filterStr ? `AND ${filterStr}` : ''}`)
 
     try {
         const response = stmt.all(req.body)
@@ -58,11 +58,11 @@ router.get('/items', (req, res) => {
     }
 })
 
-router.get('/variant', (req, res) => {
+router.get('/items', (req, res) => {
     const filterSchema = joi.object({
-        category: joi.string().required(),
         min_price: joi.number().optional(),
-        max_price: joi.number().optional()
+        max_price: joi.number().optional(),
+        category: joi.string().optional()
     })
 
     const filterValidationResult = filterSchema.validate(req.body)
