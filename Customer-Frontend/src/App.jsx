@@ -5,6 +5,7 @@ import axios from 'axios'
 import { useAccessToken, clearTokens } from './hooks/useAccessToken'
 
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Home from './pages/Home'
 import Contact from './pages/Contact'
 import Auth from './pages/Auth'
@@ -54,6 +55,7 @@ function App() {
                         <Route path='/auth' element={<Auth />} />
                         <Route path='/account' element={<Account />} />
                     </Routes>
+                    <Footer />
                 </Router>
             </UserContext.Provider>
         </>
