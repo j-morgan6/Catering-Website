@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { UserContext } from './hooks/useUser';
+import axios from 'axios';
+import { useAccessToken } from './hooks/useAccessToken';
+
+import Navbar from './components/Navbar';
+import Auth from './pages/Auth';
+import Dashboard from './pages/Dashboard';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [user, setUser] = useState(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const login = async (accessToken) => {
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`;
+        try {
+            const response = await axios.get(`${apiURI}/admin`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            });
+            setUser(response.data);
+        } catch (err) {
+            console.error(err);
+            setUser(null);  // Ensure user is null on failed login
+        }
+    };
+
+    const logout = () => {
+        setUser(null);
+        // Redirect to login page if logout is triggered
+        window.location.href = '/auth';
+    };
+
+    useEffect(() => {
+        const getUser = async () => {
+            const accessToken = await useAccessToken();
+            if (accessToken) {
+                await login(accessToken);
+            } else {
+                setUser(null);
+            }
+        };
+        getUser();
+    }, []);
+
+    return (
+        <UserContext.Provider value={{ user, login, logout }}>
+            <Router>
+                <Navbar />
+                <Routes>
+                    <Route path='/' element={<Navigate replace to="/dashboard" />} />
+                    <Route path='/auth' element={<Auth />} />
+                    <Route path='/dashboard' element={user ? <Dashboard /> : <Navigate replace to="/auth" />} />
+                </Routes>
+            </Router>
+        </UserContext.Provider>
+    );
 }
 
-export default App
+export default App;

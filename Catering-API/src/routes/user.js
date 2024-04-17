@@ -262,7 +262,7 @@ router.get('/orders', (req, res) => {
     }
 
     let orderInfoQuery = `SELECT
-    \`Order\`.ID, \`Order\`.Timestamp, \`Order\`.Status, \`Order\`.OrderType, \`Order\`.DeliveryPickupTime,
+    \`Order\`*,
     (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
     Customer.FirstName, Customer.LastName, Customer.Company,
     Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
@@ -303,7 +303,7 @@ router.get('/orders', (req, res) => {
                 timestamp: orderInfo.Timestamp,
                 status: orderInfo.Status,
                 orderType: orderInfo.OrderType,
-                deliveryPickupTime: orderInfo.DeliveryPickupTime,
+                dueDate: orderInfo.DueDate,
                 total: orderInfo.Total,
                 store: {
                     name: orderInfo.StoreName,
@@ -351,7 +351,7 @@ router.get('/order/:orderID', (req, res) => {
         return
     }
     let orderInfoQuery = `SELECT
-    \`Order\`.ID, \`Order\`.Timestamp, \`Order\`.Status, \`Order\`.OrderType, \`Order\`.DeliveryPickupTime,
+    \`Order\`*,
     (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
     Customer.FirstName, Customer.LastName, Customer.Company,
     Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
@@ -387,7 +387,7 @@ router.get('/order/:orderID', (req, res) => {
             timestamp: orderResponse.Timestamp,
             status: orderResponse.Status,
             orderType: orderResponse.OrderType,
-            deliveryPickupTime: orderResponse.DeliveryPickupTime,
+            dueDate: orderResponse.DueDate,
             total: orderResponse.Total,
             store: {
                 name: orderResponse.StoreName,
