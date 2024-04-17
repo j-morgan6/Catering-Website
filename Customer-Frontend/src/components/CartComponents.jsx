@@ -94,7 +94,7 @@ function CartQuantityBar({orderItem, ChangeQuantity}){
     )
 }
 
-function OrderForm({user, orderItems}){
+function OrderForm({user, orderItems, HandleOrderSuccess}){
     const [formStatus, setFormStatus] = useState("notReady")
     const [triedToSubmit, setTriedToSubmit] = useState(false)
     const[loggedIn, setLoggedIn] = useState("false")
@@ -121,26 +121,6 @@ function OrderForm({user, orderItems}){
 
     useEffect(() => {
         async function placeOrder(order) {
-            /**
-             * The structure of 'order' should be:
-            const order = {
-                store: (number) ID of the store to order from,
-                type: (string) can be either 'Delivery' or 'Pickup',
-                address: {
-                    street: (string) street number and name (e.g. "123 Summit Ave."),
-                    city: (string),
-                    province: (string),
-                    postal: (string)
-                },
-                due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
-                items: (array) [
-                    item: (number),
-                    quantity: (number)
-                ]
-            }
-
-            * If the "type" field is 'Pickup' do not provide an address
-            */
             const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
             try {
                 const accessToken = await useAccessToken()
@@ -152,43 +132,38 @@ function OrderForm({user, orderItems}){
                     withCredentials: true
                 })
                 
-                console.log("successfully submitted non-guest order\n")
                 // Put whatever you want to happen when the order is successfully placed here
+                console.log("successfully submitted non-guest order\n")
+                setFormStatus("success")
+                HandleOrderSuccess() //notify cart about order success
+
+                //reset the form data
+                setCustomerInfo({
+                    first_name: "",
+                    last_name: "",
+                    phone: "",
+                    email: "",
+                    company: ""
+                })
+                setFormData({
+                    store: 0,
+                    type: "",
+                    address: {
+                        street: "",
+                        city: "",
+                        postal: "",
+                        province: "",
+                    },
+                    due_date: ""
+                })
             } catch (err) {
                 // handle errors here
                 console.log("failed to submit non-guest order\n", err)
-                setFormStatus("notReady")
+                setFormStatus("failure")
             }
         }
 
         async function placeGuestOrder(order) {
-            /**
-             * The structure of 'order' should be:
-            const order = {
-                guest: {
-                    first_name: (string),
-                    last_name: (string),
-                    email: (string),
-                    phone: (string),
-                    company: (string)
-                }
-                store: (number) ID of the store to order from,
-                type: (string) can be either 'Delivery' or 'Pickup',
-                address: {
-                    street: (string) street number and name (e.g. "123 Summit Ave."),
-                    city: (string),
-                    province: (string),
-                    postal: (string)
-                },
-                due_date: (string) should be in the format "yyyy-mm-dd hh:mm:ss",
-                items: (array) [
-                    item: (number),
-                    quantity: (number)
-                ]
-            }
-
-            * If the "type" field is 'Pickup' do not provide an address
-            */
             const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}`
             try {
                 const accessToken = await useAccessToken()
@@ -199,13 +174,34 @@ function OrderForm({user, orderItems}){
                     },
                     withCredentials: true
                 })
-                
-                console.log("successfully submitted guest order\n")
                 // Put whatever you want to happen when the order is successfully placed here
+                console.log("successfully submitted guest order\n")
+                setFormStatus("success")
+                HandleOrderSuccess()
+
+                //reset the form data
+                setCustomerInfo({
+                    first_name: "",
+                    last_name: "",
+                    phone: "",
+                    email: "",
+                    company: ""
+                })
+                setFormData({
+                    store: 0,
+                    type: "",
+                    address: {
+                        street: "",
+                        city: "",
+                        postal: "",
+                        province: "",
+                    },
+                    due_date: ""
+                })
             } catch (err) {
                 // handle errors here
                 console.log("failed to submit guest order\n", err)
-                setFormStatus("notReady")
+                setFormStatus("failure")
             }
         }
 
@@ -246,7 +242,7 @@ function OrderForm({user, orderItems}){
     }
 
     function TryUpdateStatus(){
-        if(formStatus === "notReady" || formStatus === "ready"){ //see if can now update to ready to submit form
+        if(formStatus === "notReady" || formStatus === "ready" || formStatus === "failure"){ //see if can now update to ready to submit form
             let canSetReady = true
             if(!user){ //must have user fields filled out
                 if(!customerInfo.first_name || !customerInfo.last_name || !customerInfo.phone 
@@ -258,12 +254,13 @@ function OrderForm({user, orderItems}){
                 canSetReady = false
 
             if(formData.type === "Delivery"){ //make sure delivery fields filled out
-                if(!formData.address.street || !formData.address.city || !formData.address.postal)
+                if(!formData.address.street || !formData.address.city || !formData.address.postal 
+                    || !formData.address.province)
                     canSetReady = false
             }
             if(orderItems.length <= 0) canSetReady = false
 
-            if(canSetReady && formStatus === "notReady") 
+            if(canSetReady && (formStatus === "notReady" || formStatus === "failure")) 
                 setFormStatus("ready")
             else if(!canSetReady && formStatus === "ready")
                 setFormStatus("notReady")
@@ -298,8 +295,8 @@ function OrderForm({user, orderItems}){
             default:
                 console.log("tried to update a non-existant property in onformchange")
         }
-        console.log("/n", newFormData.due_date)
         setFormData(newFormData)
+        if(formStatus === "failure") TryUpdateStatus()//waits until change to return to ready
     }
 
     function OnCustomerInfoChange(propetyName, newVal){
@@ -324,6 +321,7 @@ function OrderForm({user, orderItems}){
                 console.log("tried to update a non-existant property in cust info change")
         }
         setCustomerInfo(newCustomerInfo)
+        if(formStatus === "failure") TryUpdateStatus() //waits until change to return to ready
     }
 
     function FormatDate(datetimeLocal) {
@@ -415,11 +413,17 @@ function OrderForm({user, orderItems}){
                         onChange={(e) => OnFormChange("province", e.target.value)}/>
                 </div>
             }
-            <button 
-                type="submit" 
-                onClick={() => SubmitOrder()}
-                disabled={formStatus !== "ready"}
-            >Place Order</button>
+            <div className="bottomFormBar">
+                {formStatus === "failure" &&
+                    <p className="submitFailText">Please try again.</p>
+                }
+                <button 
+                    type="submit" 
+                    className="placeOrder"
+                    onClick={() => SubmitOrder()}
+                    disabled={formStatus !== "ready"}
+                >Place Order</button>
+            </div>
         </form>
     </div>
     );
