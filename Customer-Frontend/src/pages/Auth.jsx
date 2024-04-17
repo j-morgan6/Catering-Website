@@ -125,11 +125,11 @@ function Auth() {
                             <input className='form-input-field' type="first-name" name='first-name' value={firstName} onChange={e => setFirstName(e.target.value)} placeholder='First Name*' />
                             <input className='form-input-field' type="last-name" name='last-name' value={lastName} onChange={e => setLastName(e.target.value)} placeholder='Last Name*' />
                         </div>
-                        <input className='form-input-field' type="company" name='company' value={company} onChange={e => setCompany(e.target.value)} placeholder='Company' />
+                        <input className='form-input-field' type="company" name='company' value={company} onChange={e => setCompany(e.target.value)} placeholder='Company*' />
                         <input className='form-input-field' type="email" name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email*' />
                         <input className='form-input-field' type="phone" name='phone' value={phone} onChange={e => setPhone(e.target.value)} placeholder='Phone*' />
                         <input className='form-input-field' type="password" name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password*' />
-                        <input type="submit" value="Log In" className='primary-btn' />
+                        <input type="submit" value="Sign Up" className='primary-btn' />
                         <p>Already have an account? <button onClick={() => setMethod('login')}>Log In</button>.</p>
                     </form>
                 )}
