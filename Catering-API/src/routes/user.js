@@ -262,7 +262,7 @@ router.get('/orders', (req, res) => {
     }
 
     let orderInfoQuery = `SELECT
-    \`Order\`*,
+    \`Order\`.*,
     (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
     Customer.FirstName, Customer.LastName, Customer.Company,
     Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
@@ -271,6 +271,7 @@ router.get('/orders', (req, res) => {
     ORDER BY \`Order\`.Timestamp DESC
     `
     if (req.query.limit) orderInfoQuery += ' LIMIT $limit'
+
     const orderInfoStmt = Database.prepare(orderInfoQuery)
 
     const orderItemsQuery = `SELECT

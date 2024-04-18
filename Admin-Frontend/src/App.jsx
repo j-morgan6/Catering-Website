@@ -7,6 +7,7 @@ import { useAccessToken } from './hooks/useAccessToken';
 import Navbar from './components/Navbar';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
+import MenuUpdate from './pages/MenuUpdate';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -52,6 +53,7 @@ function App() {
                     <Route path='/' element={<Navigate replace to="/dashboard" />} />
                     <Route path='/auth' element={<Auth />} />
                     <Route path='/dashboard' element={user ? <Dashboard /> : <Navigate replace to="/auth" />} />
+                    <Route path='/update-menu' element={user ? <MenuUpdate /> : <Navigate replace to="/auth" />} />
                 </Routes>
             </Router>
         </UserContext.Provider>

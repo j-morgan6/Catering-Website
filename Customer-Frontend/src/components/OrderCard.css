@@ -1,0 +1,27 @@
+.order-card {
+    display: block;
+    width: 100%;
+    max-width: 768px;
+    background-color: white;
+    border: 2px solid var(--brand-tertiary);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.order-card-btn {
+    width: 100%;
+    border: none;
+    padding: .5rem 1rem;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 700;
+    background-color: white;
+    border-bottom: 1px solid var(--brand-tertiary);
+}
+
+.order-card-content {
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
