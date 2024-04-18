@@ -9,9 +9,10 @@ function Dashboard() {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [selectedOrderItems, setSelectedOrderItems] = useState([]);
     const [isUpdateStatusVisible, setIsUpdateStatusVisible] = useState(false);
+    const [isCustomerPopupVisible, setIsCustomerPopupVisible] = useState(false);
+    const [selectedCustomer, setSelectedCustomer] = useState({});
     const [currentOrderForUpdate, setCurrentOrderForUpdate] = useState(null);
     const [newStatus, setNewStatus] = useState('');
-    const [filters, setFilters] = useState({status: '',timestamp: '',price: ''});
     
 
     const navigate = useNavigate();
@@ -144,6 +145,24 @@ function Dashboard() {
         setIsPopupVisible(true);
     };
 
+    const handleCustomerClick = (customer) => {
+        setSelectedCustomer(customer);
+        setIsCustomerPopupVisible(true);
+    };
+
+    const CustomerDetailsPopup = () => (
+        <div className="popup-overlay" onClick={() => setIsCustomerPopupVisible(false)}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                <h3>Customer Details</h3>
+                <p><strong>Name:</strong> {selectedCustomer.name}</p>
+                <p><strong>Email:</strong> {selectedCustomer.email}</p>
+                <p><strong>Phone:</strong> {selectedCustomer.phone}</p>
+                <button onClick={() => setIsCustomerPopupVisible(false)}>Close</button>
+            </div>
+        </div>
+    );
+    
+
     return (
         <div className="dashboard-container">
             <table className="centered-table">
@@ -162,7 +181,13 @@ function Dashboard() {
                 <tbody>
                 {orders.map(order => (
                     <tr key={order.orderID}>
-                        <td>{`${order.customer.firstName} ${order.customer.lastName}`}</td>
+                        <td onClick={() => handleCustomerClick({
+                            name: `${order.customer.firstName} ${order.customer.lastName}`,
+                            email: order.customer.email,
+                            phone: order.customer.phone
+                        })} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                            {`${order.customer.firstName} ${order.customer.lastName}`}
+                        </td>
                         <td>{order.store.street}</td>
                         <td>{order.status}</td>
                         <td>{order.timestamp}</td>
@@ -178,6 +203,7 @@ function Dashboard() {
             </table>
             {isPopupVisible && <OrderItemsPopup />}
             {isUpdateStatusVisible && <UpdateStatusPopup />}     
+            {isCustomerPopupVisible && <CustomerDetailsPopup />}
         </div>
     );
 }

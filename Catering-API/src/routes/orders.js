@@ -66,23 +66,27 @@ router.get('/', (req, res) => {
     const customerOrderStmt = Database.prepare(`SELECT
     \`Order\`.*,
     (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
-    Guest.FirstName, Guest.LastName, Guest.Company,
+    Guest.FirstName, Guest.LastName, Guest.Company, Guest.Email, Guest.Phone,
     Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
     FROM (\`Order\` JOIN Store ON \`Order\`.StoreID = Store.ID) JOIN Guest ON \`Order\`.GuestID = Guest.ID
     ${filterStr ? `WHERE ${filterStr} ` : ''}
     ${orderBy}
     `)
 
-    const guestOrderStmt = Database.prepare(`SELECT
-    \`Order\`.*,
-    (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
-    Customer.FirstName, Customer.LastName, Customer.Company,
-    Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
-    FROM (\`Order\` JOIN Store ON \`Order\`.StoreID = Store.ID) JOIN Customer ON \`Order\`.CustomerID = Customer.ID
+    const guestOrderStmt = Database.prepare(`
+    SELECT
+        \`Order\`.*,
+        (SELECT SUM(MenuItem.Price * OrderItem.Quantity) FROM MenuItem JOIN OrderItem ON MenuItem.ID = OrderItem.MenuItemID WHERE OrderItem.OrderID = \`Order\`.ID) as Total,
+        Customer.FirstName, Customer.LastName, Customer.Company,
+        CustomerAuth.Email, CustomerAuth.Phone,  
+        Store.Name as StoreName, Store.StreetNumber, Store.StreetName, Store.City, Store.Province, Store.PostalCode
+    FROM (\`Order\`
+        JOIN Store ON \`Order\`.StoreID = Store.ID)
+        JOIN Customer ON \`Order\`.CustomerID = Customer.ID
+        JOIN CustomerAuthentication AS CustomerAuth ON Customer.ID = CustomerAuth.CustomerID 
     ${filterStr ? `WHERE ${filterStr} ` : ''}
     ${orderBy}
-    `)
-
+`);
     const orderItemsStmt = Database.prepare(`SELECT
     MenuItem.Name, MenuItem.Description, MenuItem.Price, MenuItem.ImageURL,
     OrderItem.Quantity,
@@ -119,7 +123,9 @@ router.get('/', (req, res) => {
                 customer: {
                     firstName: orderInfo.FirstName,
                     lastName: orderInfo.LastName,
-                    company: orderInfo.Company
+                    company: orderInfo.Company,
+                    email: orderInfo.Email,
+                    phone: orderInfo.Phone
                 },
                 items: itemsResponse
             }
@@ -147,7 +153,9 @@ router.get('/', (req, res) => {
                 customer: {
                     firstName: orderInfo.FirstName,
                     lastName: orderInfo.LastName,
-                    company: orderInfo.Company
+                    company: orderInfo.Company,
+                    email: orderInfo.Email,
+                    phone: orderInfo.Phone
                 },
                 items: itemsResponse
             }
