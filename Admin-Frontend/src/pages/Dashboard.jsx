@@ -13,6 +13,8 @@ function Dashboard() {
     const [selectedCustomer, setSelectedCustomer] = useState({});
     const [currentOrderForUpdate, setCurrentOrderForUpdate] = useState(null);
     const [newStatus, setNewStatus] = useState('');
+    const [isAddressVisible, setIsAddressVisible] = useState(false);
+    const [currentAddress, setCurrentAddress] = useState('');
     
 
     const navigate = useNavigate();
@@ -161,6 +163,20 @@ function Dashboard() {
             </div>
         </div>
     );
+
+    const handleAddressClick = (address) => {
+        setCurrentAddress(address);
+        setIsAddressVisible(true);
+    };
+
+    const AddressPopup = () => (
+        <div className="popup-overlay" onClick={() => setIsAddressVisible(false)}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                <p>{currentAddress}</p>
+                <button onClick={() => setIsAddressVisible(false)}>Close</button>
+            </div>
+        </div>
+    );
     
 
     return (
@@ -191,9 +207,12 @@ function Dashboard() {
                         <td>{order.store.street}</td>
                         <td>{order.status}</td>
                         <td>{order.timestamp}</td>
-                        <td>{order.orderType}</td>
+                        <td style={{ cursor: order.orderType === 'Delivery' ? 'pointer' : 'default', color: order.orderType === 'Delivery' ? 'blue' : 'inherit', textDecoration: order.orderType === 'Delivery' ? 'underline' : 'none' }}
+                        onClick={() => order.orderType === 'Delivery' && handleAddressClick(order.address)}>
+                        {order.orderType}
+                        </td>
                         <td>{order.dueDate}</td>
-                        <td>{order.total !== null ? order.total : 'N/A'}</td>
+                        <td>{order.total !== null ? order.total.toFixed(2) : 'N/A'}</td>
                         <td><button className="update-status-btn" onClick={(e) => handleUpdateStatusClick(order,e)}>Update Status</button>
                             <button onClick={() => handleViewOrder(order.items)} className="view-order-btn">View Order</button>
                             <button onClick={() => handleDelete(order.orderID)} className="delete-button">Delete Order</button></td>
@@ -204,6 +223,7 @@ function Dashboard() {
             {isPopupVisible && <OrderItemsPopup />}
             {isUpdateStatusVisible && <UpdateStatusPopup />}     
             {isCustomerPopupVisible && <CustomerDetailsPopup />}
+            {isAddressVisible && <AddressPopup />}
         </div>
     );
 }

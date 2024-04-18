@@ -130,6 +130,10 @@ router.get('/', (req, res) => {
                 items: itemsResponse
             }
 
+            if (orderInfo.OrderType === 'Delivery') {
+                order.address = `${orderInfo.DeliveryStreet}, ${orderInfo.DeliveryCity}, ${orderInfo.DeliveryProvince} ${orderInfo.DeliveryPostalCode}, Canada`;
+            }
+
             orders.push(order)
         }
 
@@ -158,6 +162,10 @@ router.get('/', (req, res) => {
                     phone: orderInfo.Phone
                 },
                 items: itemsResponse
+            }
+
+            if (orderInfo.OrderType === 'Delivery') {
+                order.address = `${orderInfo.DeliveryStreet}, ${orderInfo.DeliveryCity}, ${orderInfo.DeliveryProvince} ${orderInfo.DeliveryPostalCode}, Canada`;
             }
 
             orders.push(order)
