@@ -7,6 +7,15 @@
     gap: 24px;
 }
 
+.order-container {
+    padding: 1rem;
+    background-color: white;
+    width: 100%;
+    max-width: 768px;
+    border: 2px solid var(--brand-tertiary);
+    border-radius: 1rem;
+}
+
 .account-module {
     display: block;
     width: 100%;

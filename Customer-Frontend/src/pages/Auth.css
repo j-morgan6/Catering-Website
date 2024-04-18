@@ -1,8 +1,7 @@
 #auth-page {
     display: flex;
     width: 100%;
-    min-height: 100vh;
-    overflow: hidden;
+    height: 100vh;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -69,20 +68,6 @@
 
 .input-text:focus {
     border: 2px solid var(--background);
-}
-
-input[type=checkbox] {
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
-    appearance: none;
-    border: 1px solid black;
-    border-radius: .5rem;
-    transition: all .1s ease;
-}
-
-input[type=checkbox]:checked {
-    background-color: var(--brand-tertiary);
 }
 
 .auth-form span {
