@@ -109,6 +109,86 @@ router.get('/variant', (req, res) => {
     }
 })
 
+router.post('/add-item', (req, res) => {
+    // Get authorization token
+    const token = extractAuthToken(req.headers.authorization)
+
+    const payload = AdminTokens.validate(token)
+    if (!payload) {
+        res.status(StatusCodes.UNAUTHORIZED).send({
+            error: {
+                code: StatusCodes.UNAUTHORIZED,
+                reason: ReasonPhrases.UNAUTHORIZED,
+                message: "Invaliad authorization token."
+            }
+        })
+        return
+    }
+
+    const schema = joi.object({
+        name: joi.string().required(),
+        description: joi.string().optional(),
+        price: joi.number().required(),
+        category: joi.string().required(),
+        image: joi.string().optional(),
+        isVegetarian: joi.number().optional()
+    })
+
+    const validationResult = schema.validate(req.body)
+    if (validationResult.error) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            error: {
+                code: StatusCodes.BAD_REQUEST,
+                reason: ReasonPhrases.BAD_REQUEST,
+                message: validationResult.error.message
+            }
+        })
+        return
+    }
+
+    const columnMap = {
+        name: "Name",
+        description: "Description",
+        price: "Price",
+        category: "Category",
+        image: "ImageURL",
+        isVegetarian: "IsVegetarian"
+    }
+
+    const valueMap = {
+        name: "$name",
+        description: "$description",
+        price: "$price",
+        category: "$category",
+        image: "$image",
+        isVegetarian: "$isVegetarian"
+    }
+
+    const columns = []
+    for (const column in req.body) if (columnMap[column]) columns.push(columnMap[column])
+    const columnStr = columns.join(', ')
+
+    const values = []
+    for (const value in req.body) if (valueMap[value]) values.push(valueMap[value])
+    const valueStr = values.join(', ')
+
+    const stmt = Database.prepare(`INSERT INTO MenuItem (${columnStr}) VALUES (${valueStr})`)
+
+    try {
+        stmt.run(req.body)
+
+        res.send({ success: true })
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            error: {
+                code: StatusCodes.INTERNAL_SERVER_ERROR,
+                reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                message: err.message ? err.message : "The server encountered an error."
+            }
+        })
+    }
+})
+
 module.exports = {
     router: router,
     route: "/menu"

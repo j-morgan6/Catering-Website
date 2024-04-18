@@ -3,6 +3,10 @@
   --brand-secondary: #000000;
   --brand-tertiary: #CE9539;
   --background: #EDDDC2;
+  --background: #EDDDC2;
+  --success: #2ECC71;
+  --danger: #DC143C;
+  --info: #1E90FF;
 }
 
 body {
@@ -22,4 +26,118 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.form-input-field {
+  width: 100%;
+  height: 3.5rem;
+  padding: 0 1rem;
+  border: 2px solid var(--brand-tertiary);
+  border-radius: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  text-decoration: none;
+  font-family: inherit;
+  font-weight: 400;
+  transition: all .3s ease;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.form-input-field:hover {
+  border: 2px solid var(--background);
+}
+
+.form-input-field:focus {
+  border: 2px solid var(--background);
+}
+
+input[type="submit"] {
+  height: 100%;
+  max-height: 4rem;
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--brand-primary);
+  cursor: pointer;
+  transition: all .3s ease;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+input[type="submit"]:hover {
+  background-color: var(--brand-secondary);
+}
+
+input[type=checkbox] {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  appearance: none;
+  border: 1px solid black;
+  border-radius: .5rem;
+  transition: all .1s ease;
+}
+
+input[type=checkbox]:checked {
+  background-color: var(--brand-tertiary);
+}
+
+.primary-btn {
+  height: 100%;
+  max-height: 4rem;
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--brand-primary);
+  cursor: pointer;
+  transition: all .3s ease;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.primary-btn:hover {
+  background-color: var(--brand-secondary);
+}
+
+.secondary-btn {
+  height: 100%;
+  max-height: 4rem;
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--brand-secondary);
+  cursor: pointer;
+  transition: all .3s ease;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.secondary-btn:hover {
+  background-color: rgba(0, 0, 0, .7);
+}
+
+.success {
+  color: var(--success);
+}
+
+.danger {
+  color: var(--danger);
+}
+
+.info {
+  color: var(--info);
 }

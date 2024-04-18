@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useUser } from '../hooks/useUser'
 import { useAccessToken } from '../hooks/useAccessToken'
 import './Account.css'
+import OrderCard from '../components/OrderCard'
 
 export default function Account() {
+    const { user, logout } = useUser()
+
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [company, setCompany] = useState('')
     const [profileMessage, setProfileMessage] = useState(null)
+    function resetProfile() {
+        setEmail(user.Email)
+        setPhone(user.Phone)
+        setCompany(user.Company)
+    }
 
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
@@ -21,12 +29,12 @@ export default function Account() {
         setConfirmPassword('')
     }
 
+    const [order, setOrder] = useState(null)
+
     const [deleteError, setDeleteError] = useState('')
     const [popupVisible, setPopupVisible] = useState(false)
 
     const navigate = useNavigate()
-
-    const { user, logout } = useUser()
 
     function logoutUser() {
         logout()
@@ -42,8 +50,55 @@ export default function Account() {
         }
     })
 
-    function handleProfileUpdate(event) {
+    useEffect(() => {
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/user/orders?limit=1`
+        const getOrder = async () => {
+            try {
+                const accessToken = await useAccessToken()
+                const response = await axios.get(apiURI, {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                })
+    
+                setOrder(response.data[0])
+            } catch (err) {
+    
+            }
+        }
+        getOrder()
+    }, [])
+
+    async function handleProfileUpdate(event) {
         event.preventDefault()
+
+        const apiURI = `http://${import.meta.env.VITE_API_DOMAIN}:${import.meta.env.VITE_API_PORT}/user`
+        try {
+            const accessToken = await useAccessToken()
+        
+            await axios.put(apiURI, {
+                company: company,
+                email: email,
+                phone: phone
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                withCredentials: true
+            })
+            setProfileMessage({
+                success: true,
+                message: "Success! Your profile has been updated."
+            })
+
+            window.location.reload()
+        } catch (err) {
+            setProfileMessage({
+                success: false,
+                message: "There was an error updating your profile. Try again later."
+            })
+            resetProfile()
+        }
     } 
 
     async function handlePasswordUpdate(event) {
@@ -105,6 +160,12 @@ export default function Account() {
 
     return (
         <div id='account-page'>
+            {order && (
+                <div className='order-container'>
+                    <h2>Recent Order</h2>
+                    <OrderCard order={order} />
+                </div>
+            )}
             <div className='account-module'>
                 <div className='account-module-header'>
                     <h2>Profile</h2>
@@ -174,7 +235,7 @@ export default function Account() {
                     <button className='secondary-btn' onClick={() => setPopupVisible(true)} >Delete Account</button>
                 </div>  
                 <div className='profile-btn'>
-                    <button className='primary-btn' onClick={logout} >Log Out</button>
+                    <button className='primary-btn' onClick={logoutUser} >Log Out</button>
                 </div>
             </div>
             {popupVisible && (
